@@ -6,7 +6,7 @@ I've been interested in unusual tropical storm tracks ever since seeing the comp
 ## Functionality
 Swirl Tracker 6 will allow users to visualize historical, named tropical storm paths.  Paths can be selected by a multitude of attributes, or with a manual click.
 
-![](images/st6-wireframe.png)
+![wireframe](images/st6-wireframe.png)
 
 ### MVPs
 * Accurate, georeferenced background map with zooming and panning
