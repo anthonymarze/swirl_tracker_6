@@ -1,6 +1,6 @@
 import './styles/index.scss';
 import {readStormData} from './scripts/data_util';
-import {sandy} from './data/sandy_testo.js';
+import sandy from './data/sandy_testo.js';
 // import 'terraformer-arcgis-parser';
 
 
@@ -21,10 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
             a.download = fileName;
             a.click();
         }
-    
+    console.log(sandy)
     debugger
-
-    stormData.push(sandy.toJSON());
+    
+    stormData.push(sandy);
 
     for (let i = 0; i < stormData[0].length; i++) {
         stormDataGeo.features.push({
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // console.log(data);
     // });
         
-    download(stormDataGeo.json(), 'json.txt', 'text/plain');
+    download(stormDataGeo, 'json.txt', 'text/plain');
 
         // console.log(stormDataGeo);
         // const fs = require('fs');

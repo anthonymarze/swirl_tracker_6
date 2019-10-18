@@ -1,4 +1,4 @@
-export const sandy = [
+const sandy = [
     {
         "Serial_Num": "2012296N14283",
         "Season": 2012,
@@ -792,3 +792,5 @@ export const sandy = [
         "Track_type": "main"
     }
 ];
+
+export default sandy;

@@ -56,7 +56,7 @@ module.exports = {
             },
         ]
     },
-    target: "node",
+    // target: "node",
     // externals: {
     //     "fs": "commonjs fs"
     // },
