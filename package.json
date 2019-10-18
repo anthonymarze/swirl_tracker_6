@@ -1,0 +1,57 @@
+{
+  "name": "swirl_tracker_6",
+  "version": "1.0.0",
+  "description": "## Background and Overview I've been interested in unusual tropical storm tracks ever since seeing the comprehensive wikipedia articles on each years storm tracks.  However, I felt that the data could be represented much better in an interactive way.  With Swirl Tracker 6, you can select past storms by name, intensity, damage, or location.  The quick responsiveness will make it easier to compare different storms in a visual manner.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "webpack:server": "webpack-dev-server --config webpack.dev.js",
+    "webpack:watch": "webpack --watch --config webpack.dev.js",
+    "webpack:build": "webpack --config webpack.prod.js  --optimize-minimize"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anthonymarze/swirl_tracker_6.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anthonymarze/swirl_tracker_6/issues"
+  },
+  "homepage": "https://github.com/anthonymarze/swirl_tracker_6#readme",
+  "dependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "autoprefixer": "^9.6.5",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
+    "csv-parser": "^2.3.1",
+    "fibers": "^4.0.1",
+    "mini-css-extract-plugin": "^0.8.0",
+    "node-sass": "^4.12.0",
+    "papaparse": "^5.1.0",
+    "postcss-loader": "^3.0.0",
+    "requirejs": "^2.3.6",
+    "sass": "^1.23.0",
+    "sass-loader": "^8.0.0",
+    "stream": "0.0.2",
+    "style-loader": "^1.0.0",
+    "terraformer-arcgis-parser": "^1.1.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.2",
+    "webpack-merge": "^4.2.2"
+  },
+  "browserslist": [
+    "last 1 version",
+    "> 1%",
+    "maintained node versions",
+    "not dead"
+  ],
+  "devDependencies": {
+    "@types/node": "^12.11.1",
+    "ts-loader": "^6.2.0",
+    "typescript": "^3.6.4"
+  }
+}

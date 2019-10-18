@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/styles/index.scss"],"names":[],"mappings":"AAAA,WAAW,UAAU,YAAY,YAAY","file":"main.css","sourcesContent":[".title-box{z-index:1;width:100px;height:50px;background-color:brown}\n"],"sourceRoot":""}
