@@ -1,7 +1,13 @@
 import './styles/index.scss';
+<<<<<<< HEAD
 import { readStormData } from './scripts/data_util';
 import { sandy } from './data/sandy_testo.js';
 import { stormTestList } from './data/storm_test';
+=======
+import {readStormData} from './scripts/data_util';
+import {sandy} from './data/sandy_testo.js';
+import {stormTestList} from './data/storm_test';
+>>>>>>> 6eb5dde3b607a9869f37d82af3f16b075a9f7ae8
 // import 'terraformer-arcgis-parser';
 
 
@@ -22,11 +28,19 @@ document.addEventListener("DOMContentLoaded", () => {
     let stormCoords;
 
     let stormPaths = [];
+<<<<<<< HEAD
     for (let i = 0; i < stormTestList.length; i++) {
         stormCoords = [stormTestList[i].Longitude, stormTestList[i].Latitude];
         if (i === 0) {
             stormPaths.push([stormTestList[i].Name, stormCoords]);
         } else if (stormTestList[i].Serial_Num !== stormTestList[i - 1].Serial_Num) {
+=======
+    for(let i = 0; i < stormTestList.length; i++){
+        stormCoords = [stormTestList[i].Longitude, stormTestList[i].Latitude];
+        if(i === 0){
+            stormPaths.push([stormTestList[i].Name, stormCoords]);
+        } else if (stormTestList[i].Serial_Num !== stormTestList[i - 1].Serial_Num){
+>>>>>>> 6eb5dde3b607a9869f37d82af3f16b075a9f7ae8
             stormPaths.push([stormTestList[i].Name, stormCoords]);
         } else {
             stormPaths[stormPaths.length - 1].push(stormCoords);
@@ -63,7 +77,11 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     });
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 6eb5dde3b607a9869f37d82af3f16b075a9f7ae8
 
     const stormList = document.createElement("ul");
     const stormDiv = document.getElementById("storm-list");
@@ -103,7 +121,11 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     }
 
+<<<<<<< HEAD
     let sandyBlob = new Blob([JSON.stringify(stormDataGeo)], { type: "text/plain" });
+=======
+    let sandyBlob = new Blob ([JSON.stringify(stormDataGeo)], {type: "text/plain"});
+>>>>>>> 6eb5dde3b607a9869f37d82af3f16b075a9f7ae8
     let sandyReader = new FileReader();
 
     sandyReader.addEventListener("loadend", (e) => {
@@ -111,7 +133,11 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
     sandyReader.readAsText(sandyBlob);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 6eb5dde3b607a9869f37d82af3f16b075a9f7ae8
     // let link = document.createElement("a");
     // link.href = url;
     // link.innerText = "Sandy Info";
@@ -120,7 +146,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // stormDiv.appendChild(head);
     // stormDiv.appendChild(link);
 
+<<<<<<< HEAD
     // Testing logging data
+=======
+        // Testing logging data
+>>>>>>> 6eb5dde3b607a9869f37d82af3f16b075a9f7ae8
     // d3.json("../assets/data/genres.json").then((data) => {
     // console.log(data);
     // });
