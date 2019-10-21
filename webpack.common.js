@@ -56,10 +56,6 @@ module.exports = {
             },
         ]
     },
-    target: "node",
-    // externals: {
-    //     "fs": "commonjs fs"
-    // },
     plugins: [new MiniCssExtractPlugin({
         // Options similar to the same options in webpackOptions.output
         // all options are optional
