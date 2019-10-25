@@ -37,3 +37,23 @@ export const intensityCalculator = (maxWindSpeed, selector) => {
         }
     }
 }
+
+export const intensityColor = (intensity) => {
+    if (intensity === "5") {
+        return "#ff6060";
+    } else if (intensity === "4") {
+        return "#ff8f20";
+    } else if (intensity === "3") {
+        return "#ffc140";
+    } else if (intensity === "2") {
+        return "#ffe775";
+    } else if (intensity === "1") {
+        return "#ffffcc";
+    } else if (intensity === "TS") {
+        return "#00faf4";
+    } else if (intensity === "TD") {
+        return "#5ebaff";
+    } else {
+        return "#cccccc";
+    }
+}

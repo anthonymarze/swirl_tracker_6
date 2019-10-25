@@ -1,8 +1,11 @@
 import './styles/index.scss';
+import mapboxgl from 'mapbox-gl';
+import { intensityColor } from './scripts/intensity_calculator';
 import {readStormData} from './scripts/data_util';
 import {stormTestList} from './data/storm_test';
 // import { stormData } from "./data/storm_data";
 import { createGeoJSON } from './scripts/subpaths';
+import { isSourceFile } from 'typescript';
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -13,8 +16,110 @@ document.addEventListener("DOMContentLoaded", () => {
         center: [-77.38, 39], // starting position
         zoom: 3 // starting zoom
     });
-    let a = map.getLayer('test_9-31jg2w')
-    debugger
+
+    const intensityVals = ["TD", "TS", "1", "2", "3", "4", "5"];
+
+    map.on('load', () => {
+        map.addControl(new mapboxgl.NavigationControl());
+        map.addSource('storms2000', {
+            type: 'vector',
+            lineMetrics: true,
+            url: 'mapbox://anthonymarze.87vqqpx1',
+        });
+        map.addSource('allDataPoints', {
+            type: 'vector',
+            lineMetrics: true,
+            url: 'mapbox://anthonymarze.849mm1vv',
+        });
+        intensityVals.forEach(val => {
+            if (!map.getLayer(val)) {
+                map.addLayer({
+                    "id": val,
+                    "type": "line",
+                    "source": "storms2000",
+                    "source-layer": "test_9-31jg2w",
+                    "paint": {
+                        "line-color": intensityColor(val)
+                    },
+                    "filter": ["==", "intensity", val],
+                    "layout": {
+                        "visibility": "visible"
+                    }
+                })
+            }
+        })
+        if (!map.getLayer("draw-detail")) {
+            map.addLayer({
+                "id": "draw-detail",
+                "type": "circle",
+                "source": "allDataPoints",
+                "source-layer": "mapbox_storm_data-17ruvm",
+                "paint": {
+                    // "circle-radius": {
+                    //     "base": 2,
+                    //     "stops": [[12, 2], [22, 180]]
+                    // },
+                    "circle-color": "#696969"
+                },
+                // "filter": ["==", "season", 2000],
+                "layout": {
+                    "visibility": "none"
+                }
+            })
+        }
+
+        console.log(map.getLayer("draw-detail"));
+    });
+
+    const clickedUpdate = (e) => {
+        let val = event.target.innerHTML;
+        e.preventDefault();
+        e.stopPropagation();
+
+        if(map.getLayoutProperty(val, "visibility") === "visible"){
+            map.setLayoutProperty(val, "visibility", "none");
+        } else {
+            map.setLayoutProperty(val, "visibility", "visible");
+        }
+    }
+
+    // const detailedPath = (e) => {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+
+    //     map.addLayer({
+    //         "type": 'line',
+    //         "source": "storms2000",
+    //         "source-layer": "test_9-31jg2w",
+    //         id: sourceName.concat(numPoint),
+    //         "paint": {
+    //             "line-color": "red",
+    //             "line-width": 6,
+    //             "line-gradient": [
+    //                 "interpolate",
+    //                 ["linear"],
+    //                 ["line-progress"],
+    //                 0, prevPointColor,
+    //                 1, pointColor
+    //             ]
+    //         },
+    //         "layout": {
+    //             "visibility": "visibile",
+    //             "line-cap": "round",
+    //             "line-join": "round"
+    //         }
+    //     });
+
+    //     numPoint += 1;
+    //     prevPointColor = pointColor;
+    // }
+
+    document.querySelectorAll(".update").forEach(item => {
+        item.addEventListener("click", clickedUpdate);
+    });
+
+    // sk.eyJ1IjoiYW50aG9ueW1hcnplIiwiYSI6ImNrMXdoZ3AwNDAxdTYzbXM1dmY4eHZzazAifQ.ygIG8Tr1P9Wg8nK5VmicPA
+
 
     // map.on('load', () => {
     //     map.addLayer({
