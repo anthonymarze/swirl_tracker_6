@@ -1,15 +1,10 @@
 import './styles/index.scss';
 import mapboxgl from 'mapbox-gl';
-import { intensityColor } from './scripts/intensity_calculator';
-import {readStormData} from './scripts/data_util';
-import {stormTestList} from './data/storm_test';
-// import { stormData } from "./data/storm_data";
-import { createGeoJSON } from './scripts/subpaths';
-import { isSourceFile } from 'typescript';
+import { intensityColor } from './scripts/intensity_calculator.js';
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    mapboxgl.accessToken = 'pk.eyJ1IjoiYW50aG9ueW1hcnplIiwiYSI6ImNrMXJ6OXB0bDA4aDczZ211NmhjeXRqb3AifQ.93nxr5Fug4soMvAqoBNlWQ';
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYW50aG9ueW1hcnplIiwiYSI6ImNrMjZoOWU0MzBnOHMzbG8wZDN1NzByYnQifQ.Yb4cvywiiVs1hvKcTHCnAA';
     var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/anthonymarze/ck1rzyn8353181cowdfa754zg?optimize=true',
@@ -117,9 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".update").forEach(item => {
         item.addEventListener("click", clickedUpdate);
     });
-
-    // sk.eyJ1IjoiYW50aG9ueW1hcnplIiwiYSI6ImNrMXdoZ3AwNDAxdTYzbXM1dmY4eHZzazAifQ.ygIG8Tr1P9Wg8nK5VmicPA
-
 
     // map.on('load', () => {
     //     map.addLayer({
