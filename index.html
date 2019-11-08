@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Slab&display=swap" rel="stylesheet"/>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
     <link rel="stylesheet" type="text/css" href="dist/main.css">
 </head>
@@ -13,21 +14,32 @@
     <script type="module" src="./dist/main.js"></script>
     <div class="root">
         <div class="root-box">
-            <div id='map' style='width: 870px; height: 900px;'></div>
+            <div id='map'></div>
             <div class = "side-inputs">
                 <div class="title-box">
-                    <h1>Swirl Tracker 6</h1>
+                    <h1>Swirl Tracker 6</h1><br/>
+                    <h3>Hurricane data from the year 2000</h3>
                 </div>
-                    <button class="update hi-td">TD</button>
-                    <button class="update hi-ts">TS</button>
-                    <button class="update hi-1">1</button>
-                    <button class="update hi-2">2</button>
-                    <button class="update hi-3">3</button>
-                    <button class="update hi-4">4</button>
-                    <button class="update hi-5">5</button>
-                    <button class="update" id="detailed-line">draw-detail</button>
-                <div class="input-box">
-                    
+                <div class="intensity-display">
+                    <h3>Max Intensity (based on Saffir-Simpson scale)</h3>
+                    <div class="intensity-inputs">
+                        <button class="update" id ="hi-TD">TD</button>
+                        <button class="update" id ="hi-TS">TS</button>
+                        <button class="update" id ="hi-1">1</button>
+                        <button class="update" id ="hi-2">2</button>
+                        <button class="update" id ="hi-3">3</button>
+                        <button class="update" id ="hi-4">4</button>
+                        <button class="update" id ="hi-5">5</button>
+                    </div>
+                </div>
+                <div class="all-points">
+                    <button class="update" id="detailed-line">all-points</button>
+                </div>    
+                <div class="title-box" id="detail-box">
+                    <h3 id="sample-name"></h3>
+                    <h5 id="sample-season"></h5>
+                    <h5 id="sample-max-wind"></h5>
+                    <h5 id="sample-min-pressure"></h5>
                 </div>
             </div>
         </div>

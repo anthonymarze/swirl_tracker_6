@@ -54,6 +54,10 @@ module.exports = {
                     "postcss-loader"
                 ]
             },
+            {
+                test: /\.(png|jpg|gif)$/,
+                loader: "file-loader"
+            }
         ]
     },
     plugins: [new MiniCssExtractPlugin({

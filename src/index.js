@@ -2,7 +2,6 @@ import './styles/index.scss';
 import mapboxgl from 'mapbox-gl';
 import { intensityColor } from './scripts/intensity_calculator.js';
 
-
 document.addEventListener("DOMContentLoaded", () => {
     mapboxgl.accessToken = 'pk.eyJ1IjoiYW50aG9ueW1hcnplIiwiYSI6ImNrMjZoOWU0MzBnOHMzbG8wZDN1NzByYnQifQ.Yb4cvywiiVs1hvKcTHCnAA';
     var map = new mapboxgl.Map({
@@ -13,10 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const intensityVals = ["TD", "TS", "1", "2", "3", "4", "5"];
+    const popup = new mapboxgl.Popup({
+        closeButton: false
+    });
 
     map.on('load', () => {
         map.addControl(new mapboxgl.NavigationControl());
-        map.addSource('storms2000', {
+        map.addSource("storms2000", {
             type: 'vector',
             lineMetrics: true,
             url: 'mapbox://anthonymarze.87vqqpx1',
@@ -26,6 +28,37 @@ document.addEventListener("DOMContentLoaded", () => {
             lineMetrics: true,
             url: 'mapbox://anthonymarze.849mm1vv',
         });
+
+        map.addLayer({
+            "id": "all-storms",
+            "type": "line",
+            "source": "storms2000",
+            "source-layer": "test_9-31jg2w",
+            "paint": {
+                "line-width": 10,
+                "line-opacity": 0
+            },
+            "layout": {
+                "visibility": "visible"
+            }
+        });
+
+        map.addLayer({
+            "id": "all-storms-highlighted",
+            "type": "line",
+            "source": "storms2000",
+            "source-layer": "test_9-31jg2w",
+            "paint": {
+                "line-width": 5,
+                "line-gap-width": 3,
+                "line-blur": 10
+            },
+            "layout": {
+                "visibility": "visible"
+            },
+            "filter": ["==", "serial_num", ""]
+        })
+
         intensityVals.forEach(val => {
             if (!map.getLayer(val)) {
                 map.addLayer({
@@ -34,7 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     "source": "storms2000",
                     "source-layer": "test_9-31jg2w",
                     "paint": {
-                        "line-color": intensityColor(val)
+                        "line-color": intensityColor(val),
+                        "line-width": 3
                     },
                     "filter": ["==", "intensity", val],
                     "layout": {
@@ -43,9 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
             }
         })
-        if (!map.getLayer("draw-detail")) {
+
+        if (!map.getLayer("all-points")) {
             map.addLayer({
-                "id": "draw-detail",
+                "id": "all-points",
                 "type": "circle",
                 "source": "allDataPoints",
                 "source-layer": "mapbox_storm_data-17ruvm",
@@ -62,8 +97,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             })
         }
+    });
 
-        console.log(map.getLayer("draw-detail"));
+    map.on("mousemove", "all-storms", (e) => {
+        map.getCanvas().style.cursor = 'pointer';
+        let feature = e.features[0];
+
+        popup.setLngLat(e.lngLat);
+        popup.setHTML(`<h3>${feature.properties.name} (${feature.properties.season})</h3>`);
+        popup.addTo(map);
+
+        map.setFilter("all-storms-highlighted", ["==", "serial_num", `${feature.properties.serial_num}`]);
+        map.setPaintProperty("all-storms-highlighted", "line-color", intensityColor(feature.properties.intensity));
+        map.setLayoutProperty("all-storms", "visibility", "visible");
+    })
+
+    map.on("click", "all-storms", (e) => {
+        map.getCanvas().style.cursor = 'pointer';
+        let feature = e.features[0];
+
+        document.getElementById("sample-name").innerHTML = `${feature.properties.name}`;
+        document.getElementById("sample-season").innerHTML = `year: ${feature.properties.season}`;
+        document.getElementById("sample-max-wind").innerHTML = `maximum windspeed: ${feature.properties.max_windspeed} knots`;
+        document.getElementById("sample-min-pressure").innerHTML = `minimum pressure: ${feature.properties.min_pressure} millibars`;
+    })
+
+    map.on("mouseleave", "all-storms", () => {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
+        // map.setFilter('counties-highlighted', ['in', 'COUNTY', '']);
+        // overlay.style.display = 'none';
+        map.setFilter("all-storms-highlighted", ["==", "serial_num", ""]);
     });
 
     const clickedUpdate = (e) => {
@@ -73,10 +137,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if(map.getLayoutProperty(val, "visibility") === "visible"){
             map.setLayoutProperty(val, "visibility", "none");
+            document.getElementById(`hi-${val}`).style.backgroundColor = "#ffffff";
         } else {
             map.setLayoutProperty(val, "visibility", "visible");
+            document.getElementById(`hi-${val}`).style.backgroundColor = intensityColor(val);
         }
     }
+
+
+    // let counter = 1;
 
     // const detailedPath = (e) => {
     //     e.preventDefault();
