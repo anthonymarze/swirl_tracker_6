@@ -117,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let feature = e.features[0];
 
         document.getElementById("sample-name").innerHTML = `${feature.properties.name}`;
+        document.getElementById("sample-basin").innerHTML = `basin: ${feature.properties.basin}`;
         document.getElementById("sample-season").innerHTML = `year: ${feature.properties.season}`;
         document.getElementById("sample-max-wind").innerHTML = `maximum windspeed: ${feature.properties.max_windspeed} knots`;
         document.getElementById("sample-min-pressure").innerHTML = `minimum pressure: ${feature.properties.min_pressure} millibars`;
