@@ -1,6 +1,8 @@
 import './styles/index.scss';
 import mapboxgl from 'mapbox-gl';
-import { intensityColor } from './scripts/intensity_calculator.js';
+import { intensityCalculator, intensityColor } from './scripts/intensity_calculator.js';
+import { basinNames } from './scripts/basin_names';
+import { getMaxBounds } from './scripts/get_max_bounds';
 
 document.addEventListener("DOMContentLoaded", () => {
     mapboxgl.accessToken = 'pk.eyJ1IjoiYW50aG9ueW1hcnplIiwiYSI6ImNrMjZoOWU0MzBnOHMzbG8wZDN1NzByYnQifQ.Yb4cvywiiVs1hvKcTHCnAA';
@@ -15,6 +17,65 @@ document.addEventListener("DOMContentLoaded", () => {
     const popup = new mapboxgl.Popup({
         closeButton: false
     });
+    let selected = "";
+
+    const colorizedPath = (path) => {
+        let counter = 1;
+        
+
+        path.slice(1).forEach(point => {
+            let coords = [];
+            coords.push(path[counter - 1].geometry.coordinates);
+            coords.push(path[counter].geometry.coordinates);
+
+            let geojson = {
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "properties": {},
+                    "geometry": {
+                        "coordinates": coords,
+                        "type": "LineString"
+                    }
+                }]
+            };
+
+            map.addSource(`${path[0].properties.serial_num}-${counter}`, {
+                type: 'geojson',
+                lineMetrics: true,
+                data: geojson
+            });
+
+            counter += 1;
+        })
+
+        counter = 1;
+
+        path.slice(1).forEach(point => {
+            console.log(intensityCalculator(path[counter - 1].properties.wind, "color"));
+            
+            map.addLayer({
+                "type": 'line',
+                "source": `${path[0].properties.serial_num}-${counter}`,
+                "id": `${path[0].properties.serial_num}-${counter}`,
+                "paint": {
+                    "line-width": 3,
+                    "line-gradient": [
+                        "interpolate",
+                        ["linear"],
+                        ["line-progress"],
+                        0, intensityCalculator(path[counter - 1].properties.wind, "color"),
+                        1, intensityCalculator(path[counter].properties.wind, "color")
+                    ]
+                },
+                "layout": {
+                    "line-cap": "round",
+                    "line-join": "round"
+                }
+            });
+            counter += 1;
+        })
+    }
 
     map.on('load', () => {
         map.addControl(new mapboxgl.NavigationControl());
@@ -59,6 +120,29 @@ document.addEventListener("DOMContentLoaded", () => {
             "filter": ["==", "serial_num", ""]
         })
 
+        map.addLayer({
+            "id": "all-points",
+            "type": "circle",
+            "source": "allDataPoints",
+            "source-layer": "mapbox_storm_data-17ruvm",
+            "paint": {
+                "circle-color": [
+                    'step',
+                    ["get", "wind"],
+                    "#5ebaff",
+                    34, "#00faf4",
+                    64, "#ffffcc",
+                    83, "#ffe775",
+                    96, "#ffc140",
+                    113, "#ff8f20",
+                    137, "#ff6060"
+                ]
+            },
+            "layout": {
+                "visibility": "none"
+            }
+        })
+
         intensityVals.forEach(val => {
             if (!map.getLayer(val)) {
                 map.addLayer({
@@ -78,25 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         })
 
-        if (!map.getLayer("all-points")) {
-            map.addLayer({
-                "id": "all-points",
-                "type": "circle",
-                "source": "allDataPoints",
-                "source-layer": "mapbox_storm_data-17ruvm",
-                "paint": {
-                    // "circle-radius": {
-                    //     "base": 2,
-                    //     "stops": [[12, 2], [22, 180]]
-                    // },
-                    "circle-color": "#696969"
-                },
-                // "filter": ["==", "season", 2000],
-                "layout": {
-                    "visibility": "none"
-                }
-            })
-        }
     });
 
     map.on("mousemove", "all-storms", (e) => {
@@ -116,18 +181,20 @@ document.addEventListener("DOMContentLoaded", () => {
         map.getCanvas().style.cursor = 'pointer';
         let feature = e.features[0];
 
+        selected = feature.properties.serial_num;
+
+        map.fitBounds(getMaxBounds(feature.geometry.coordinates), 
+            { padding: { top: 150, bottom: 150, left: 150, right: 150 }});
+
         document.getElementById("sample-name").innerHTML = `${feature.properties.name}`;
-        document.getElementById("sample-basin").innerHTML = `basin: ${feature.properties.basin}`;
+        document.getElementById("sample-basin").innerHTML = `basin: ${basinNames(feature.properties.basin)}`;
         document.getElementById("sample-season").innerHTML = `year: ${feature.properties.season}`;
         document.getElementById("sample-max-wind").innerHTML = `maximum windspeed: ${feature.properties.max_windspeed} knots`;
-        document.getElementById("sample-min-pressure").innerHTML = `minimum pressure: ${feature.properties.min_pressure} millibars`;
-    })
+        document.getElementById("sample-min-pressure").innerHTML = `minimum pressure: ${feature.properties.min_pressure} millibars`;    })
 
     map.on("mouseleave", "all-storms", () => {
         map.getCanvas().style.cursor = '';
         popup.remove();
-        // map.setFilter('counties-highlighted', ['in', 'COUNTY', '']);
-        // overlay.style.display = 'none';
         map.setFilter("all-storms-highlighted", ["==", "serial_num", ""]);
     });
 
@@ -136,7 +203,21 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         e.stopPropagation();
 
-        if(map.getLayoutProperty(val, "visibility") === "visible"){
+        if(val === "colorized-path"){
+            if(selected === ""){
+                return
+            } else {
+                map.setFilter("all-points", ["==", "serial_num", selected]);
+                map.setLayoutProperty("all-points", "visibility", "visible");
+                setTimeout(() => {
+                    let oneStormData = map.querySourceFeatures('allDataPoints', {
+                    sourceLayer: "mapbox_storm_data-17ruvm",
+                    filter: ["==", "serial_num", selected]
+                    });
+                    colorizedPath(oneStormData);
+                }, 1000)
+            }
+        } else if(map.getLayoutProperty(val, "visibility") === "visible"){
             map.setLayoutProperty(val, "visibility", "none");
             document.getElementById(`hi-${val}`).style.backgroundColor = "#ffffff";
         } else {
@@ -145,54 +226,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-
-    // let counter = 1;
-
-    // const detailedPath = (e) => {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-
-    //     map.addLayer({
-    //         "type": 'line',
-    //         "source": "storms2000",
-    //         "source-layer": "test_9-31jg2w",
-    //         id: sourceName.concat(numPoint),
-    //         "paint": {
-    //             "line-color": "red",
-    //             "line-width": 6,
-    //             "line-gradient": [
-    //                 "interpolate",
-    //                 ["linear"],
-    //                 ["line-progress"],
-    //                 0, prevPointColor,
-    //                 1, pointColor
-    //             ]
-    //         },
-    //         "layout": {
-    //             "visibility": "visibile",
-    //             "line-cap": "round",
-    //             "line-join": "round"
-    //         }
-    //     });
-
-    //     numPoint += 1;
-    //     prevPointColor = pointColor;
-    // }
-
     document.querySelectorAll(".update").forEach(item => {
         item.addEventListener("click", clickedUpdate);
     });
-
-    // map.on('load', () => {
-    //     map.addLayer({
-    //         "id": "tracks",
-    //         "type": "MultiLineString",
-    //         "source": {
-    //             "type": "geojson",
-    //             "data": createGeoJSON(stormTestList)
-    //         }
-    //     })
-    // })
 
     // map.on('load', () => {
     //     map.addLayer
@@ -212,144 +248,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // };
 
     // download("test.txt", createGeoJSON(stormTestList));
-
-
-    // let stormCoords;
-    // let counter = 0;
-    // let stormPaths = [];
-
-    // for(let i = 0; i < stormTestList.length; i++){
-    //     stormCoords = [stormTestList[i].Longitude, stormTestList[i].Latitude];
-    //     if(i === 0){
-    //         stormPaths.push([stormTestList[i].Name, stormCoords]);
-    //     } else if (stormTestList[i].Serial_Num !== stormTestList[i - 1].Serial_Num){
-    //         stormPaths.push([stormTestList[i].Name, stormCoords]);
-    //     } else {
-    //         stormPaths[stormPaths.length - 1].push(stormCoords);
-    //     }
-    // }
-    
-
-    // map.on('load', () => {
-    //     stormPaths.forEach(path => {
-
-    //         let sourceNames = [];
-    //         let prevPointColor = "";
-    //         let pointColor;
-    //         let numPoint = 1;
-
-    //         map.addSource(sourceName, {
-    //             type: 'geojson',
-    //             lineMetrics: true,
-    //             data: {
-    //                 "type": "FeatureCollection",
-    //                 "features": [{
-    //                     "type": "Feature",
-    //                     "properties": {},
-    //                     "geometry": {
-    //                         "type": "LineString",
-    //                         "coordinates": path[1]
-    //                     }
-    //                 }]
-    //             }
-    //         });
-
-    //         path.slice(1, path.length - 1).forEach(point => {
-
-    //             if (stormTestList[counter]['Wind(WMO)'] > 157) {
-    //                 pointColor = "#ff6060";
-    //             } else if (stormTestList[counter]['Wind(WMO)'] < 157 && stormTestList[counter]['Wind(WMO)'] >= 130) {
-    //                 pointColor = "#ff8f20";
-    //             } else if (stormTestList[counter]['Wind(WMO)'] < 130 && stormTestList[counter]['Wind(WMO)'] >= 111) {
-    //                 pointColor = "#ffc140";
-    //             } else if (stormTestList[counter]['Wind(WMO)'] < 111 && stormTestList[counter]['Wind(WMO)'] >= 96) {
-    //                 pointColor = "#ffe775";
-    //             } else if (stormTestList[counter]['Wind(WMO)'] < 96 && stormTestList[counter]['Wind(WMO)'] >= 74) {
-    //                 pointColor = "#ffffcc";
-    //             } else if (stormTestList[counter]['Wind(WMO)'] < 74 && stormTestList[counter]['Wind(WMO)'] >= 39) {
-    //                 pointColor = "#00faf4";
-    //             } else if (stormTestList[counter]['Wind(WMO)'] < 39) {
-    //                 pointColor = "#5ebaff";
-    //             } else {
-    //                 pointColor = "#cccccc";
-    //             }
-
-    //             if (prevPointColor === ""){
-    //                 prevPointColor = pointColor;
-    //             }
-
-    //             let j = 2;
-    //             let sourceName = path[0].concat(":" + numPoint);
-    //             while(sourceNames.includes(sourceName)){
-    //                 sourceName = path[0].concat("-" + j + ":" + numPoint);
-    //                 j++;
-    //             }
-    //             sourceNames.push(sourceName);
-    //             debugger
-
-    //             if(numPoint === 1){
-    //                 debugger
-    //                 map.addSource(sourceName, {
-    //                     type: 'geojson',
-    //                     lineMetrics: true,
-    //                     data: {
-    //                         "type": "FeatureCollection",
-    //                         "features": [{
-    //                             "type": "Feature",
-    //                             "properties": {},
-    //                             "geometry": {
-    //                                 "type": "LineString",
-    //                                 "coordinates": path.slice(numPoint, numPoint + 2)
-    //                             }
-    //                         }]
-    //                     }
-    //                 });
-
-    //             } 
-    //             // else {
-    //             //     debugger
-    //             //     map.getSource(sourceName).setData({
-    //             //         "type": "FeatureCollection",
-    //             //         "features": [{
-    //             //             "type": "Feature",
-    //             //             "properties": {},
-    //             //             "geometry": {
-    //             //                 "type": "LineString",
-    //             //                 "coordinates": path.slice(numPoint, numPoint + 2)
-    //             //             }
-    //             //         }]
-    //             //     });
-    //             // }
-
-    //             map.addLayer({
-    //                 type: 'line',
-    //                 source:  sourceName,
-    //                 id: sourceName.concat(numPoint),
-    //                 paint: {
-    //                     'line-color': 'red',
-    //                     'line-width': 6,
-    //                     'line-gradient': [
-    //                         'interpolate',
-    //                         ['linear'],
-    //                         ['line-progress'],
-    //                         0, prevPointColor,
-    //                         1, pointColor
-    //                     ]
-    //                 },
-    //                 layout: {
-    //                 'line-cap': 'round',
-    //                 'line-join': 'round'
-    //                 }
-    //             });
-
-    //             numPoint += 1;
-    //             prevPointColor = pointColor;
-    //         })
-
-    //         counter += 1;
-    //     });
-
-    // });
 
     // const stormList = document.createElement("ul");
     // const stormDiv = document.getElementById("storm-list");
