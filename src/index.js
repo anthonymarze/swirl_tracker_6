@@ -10,10 +10,22 @@ document.addEventListener("DOMContentLoaded", () => {
         container: 'map',
         style: 'mapbox://styles/anthonymarze/ck1rzyn8353181cowdfa754zg?optimize=true',
         center: [-77.38, 39], // starting position
-        zoom: 3 // starting zoom
+        zoom: 3
     });
 
     const intensityVals = ["TD", "TS", "1", "2", "3", "4", "5"];
+    const toggledVals = ["TD", "TS", "1", "2", "3", "4", "5"];
+    const years = [1848];
+    for(let i = 1851; i < 2020; i++) {
+        years.push(i);
+    }
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    // var sel = document.getElementById('selDemo');
+    // var opt = document.createElement('option');
+    // opt.appendChild(document.createTextNode('New Option Text'));
+    // opt.value = 'option value';
+    // sel.appendChild(opt); 
+
     const popup = new mapboxgl.Popup({
         closeButton: false
     });
@@ -43,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
             map.addSource(`${path[0].properties.serial_num}-${counter}`, {
                 type: 'geojson',
                 lineMetrics: true,
-                data: geojson
+                data: datar
             });
 
             counter += 1;
@@ -78,11 +90,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     map.on('load', () => {
+        
         map.addControl(new mapboxgl.NavigationControl());
-        map.addSource("storms2000", {
-            type: 'vector',
-            lineMetrics: true,
-            url: 'mapbox://anthonymarze.87vqqpx1',
+            map.addSource("all-storms", {
+                type: 'geojson',
+                data: "http://anthonymarze.com/assets/all_storms.geojson"
+            });
+        map.addSource("all-storm-sub-paths", {
+            type: 'geojson',
+            data: "http://anthonymarze.com/assets/all_storm_sub_paths.geojson"
         });
         map.addSource('allDataPoints', {
             type: 'vector',
@@ -91,13 +107,32 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         map.addLayer({
+            "id": "all-storm-sub-paths",
+            "type": "line",
+            "source": "all-storm-sub-paths",
+            "paint": {
+                "line-width": 4,
+                "line-color": ["get", "color"]
+            }
+        });
+
+        map.addLayer({
             "id": "all-storms",
             "type": "line",
-            "source": "storms2000",
-            "source-layer": "test_9-31jg2w",
+            "source": "all-storms",
             "paint": {
-                "line-width": 10,
-                "line-opacity": 0
+                "line-width": 4,
+                "line-color": [
+                    'step',
+                    ["get", "max_windspeed"],
+                    "#5ebaff",
+                    34, "#00faf4",
+                    64, "#ffffcc",
+                    83, "#ffe775",
+                    96, "#ffc140",
+                    113, "#ff8f20",
+                    137, "#ff6060"
+                ]
             },
             "layout": {
                 "visibility": "visible"
@@ -107,12 +142,11 @@ document.addEventListener("DOMContentLoaded", () => {
         map.addLayer({
             "id": "all-storms-highlighted",
             "type": "line",
-            "source": "storms2000",
-            "source-layer": "test_9-31jg2w",
+            "source": "all-storms",
             "paint": {
-                "line-width": 5,
+                "line-width": 4,
                 "line-gap-width": 3,
-                "line-blur": 10
+                "line-blur": 15
             },
             "layout": {
                 "visibility": "visible"
@@ -142,26 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 "visibility": "none"
             }
         })
-
-        intensityVals.forEach(val => {
-            if (!map.getLayer(val)) {
-                map.addLayer({
-                    "id": val,
-                    "type": "line",
-                    "source": "storms2000",
-                    "source-layer": "test_9-31jg2w",
-                    "paint": {
-                        "line-color": intensityColor(val),
-                        "line-width": 3
-                    },
-                    "filter": ["==", "intensity", val],
-                    "layout": {
-                        "visibility": "visible"
-                    }
-                })
-            }
-        })
-
     });
 
     map.on("mousemove", "all-storms", (e) => {
@@ -190,7 +204,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("sample-basin").innerHTML = `basin: ${basinNames(feature.properties.basin)}`;
         document.getElementById("sample-season").innerHTML = `year: ${feature.properties.season}`;
         document.getElementById("sample-max-wind").innerHTML = `maximum windspeed: ${feature.properties.max_windspeed} knots`;
-        document.getElementById("sample-min-pressure").innerHTML = `minimum pressure: ${feature.properties.min_pressure} millibars`;    })
+        document.getElementById("sample-min-pressure").innerHTML = `minimum pressure: ${feature.properties.min_pressure} millibars`;
+        document.getElementById("sample-coordinates").innerHTML = `coords: ${feature.geometry.coordinates}`;  
+    })
 
     map.on("mouseleave", "all-storms", () => {
         map.getCanvas().style.cursor = '';
@@ -217,12 +233,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     colorizedPath(oneStormData);
                 }, 1000)
             }
-        } else if(map.getLayoutProperty(val, "visibility") === "visible"){
-            map.setLayoutProperty(val, "visibility", "none");
-            document.getElementById(`hi-${val}`).style.backgroundColor = "#ffffff";
+        } else if(!toggledVals.includes(val)) {
+            toggledVals.push(val)
+            let filter = ["in", "intensity"];
+            toggledVals.forEach(tVal => {
+                filter.push(tVal)
+            })
+            map.setFilter("all-storm-sub-paths", filter)
+            map.setFilter("all-storms", filter)
         } else {
-            map.setLayoutProperty(val, "visibility", "visible");
-            document.getElementById(`hi-${val}`).style.backgroundColor = intensityColor(val);
+            let valIdx = toggledVals.indexOf(val);
+            toggledVals.splice(valIdx, 1);
+            let filter = ["in", "intensity"];
+            toggledVals.forEach(tVal => {
+                filter.push(tVal)
+            })
+            map.setFilter("all-storm-sub-paths", filter)
+            map.setFilter("all-storms", filter)
         }
     }
 
