@@ -331,20 +331,21 @@ document.addEventListener("DOMContentLoaded", () => {
         item.addEventListener("input", nameUpdate);
     });
 
-    // const nameUpdate = (e) => {
-    //     let val = e.target.value;
-    //     e.preventDefault();
-    //     e.stopPropagation();
+    const basinUpdate = (e) => {
+        let val = e.target.value;
+        e.preventDefault();
+        e.stopPropagation();
+        debugger
 
-    //     let filter = ["in", "name", val.toUpperCase()];
-    //     map.setFilter("all-storm-sub-paths", filter);
-    //     map.setFilter("all-storms", filter);
-    //     map.setFilter("all-points", filter);
-    // }
+        let filter = ["in", "basin", val];
+        map.setFilter("all-storm-sub-paths", filter);
+        map.setFilter("all-storms", filter);
+        map.setFilter("all-points", filter);
+    }
 
-    // document.querySelectorAll(".update-name").forEach(item => {
-    //     item.addEventListener("input", nameUpdate);
-    // });
+    document.querySelectorAll(".update-basin").forEach(item => {
+        item.addEventListener("change", basinUpdate);
+    });
 
     // map.on('load', () => {
     //     map.addLayer

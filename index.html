@@ -18,7 +18,7 @@
             <div class = "side-inputs">
                 <div class="title-box">
                     <h1>Swirl Tracker 6</h1><br/>
-                    <h3>Hurricane data from the year 2000</h3>
+                    <h3>Worldwide Tropcial Cyclone data from 1848-2019</h3>
                 </div>
                 <div class="intensity-display">
                     <h3>Max Intensity (based on Saffir-Simpson scale)</h3>
@@ -34,7 +34,7 @@
                 </div>
                 <div class="basin-box">
                     <label class="basin-label">ocean basin(s): </label>
-                    <select multiple>
+                    <!-- <select multiple class="update-basin basin">
                         <option value="NA">North Atlantic</option>
                         <option value="SA">South Atlantic</option>
                         <option value="NI">North Indian</option>
@@ -42,8 +42,7 @@
                         <option value="WP">West Pacific</option>
                         <option value="EP">East Pacific</option>
                         <option value="SP">South Pacific</option>
-                    </select>
-                    <input type="submit" class="update-basin basin">
+                    </select> -->
                 </div>
                 <div class="name-box">
                     <label class="name-label">name:</label>
@@ -51,7 +50,7 @@
                 </div>
                 <div class="season-box">
                     <label class="year-label">year:</label>
-                    <input type="text" class="update-season season">
+                    <input type="number" name="points" min="1848" max="2019" step="1" value="2000" class="update-season season">
                 </div>
                 <div class="all-points">
                     <button class="update" id="detailed-paths">detailed-paths</button>
