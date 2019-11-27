@@ -92,17 +92,21 @@ document.addEventListener("DOMContentLoaded", () => {
     map.on('load', () => {
         
         map.addControl(new mapboxgl.NavigationControl());
-            map.addSource("all-storms", {
-                type: 'geojson',
-                data: "http://anthonymarze.com/assets/all_storms.geojson"
-            });
+        map.addSource("all-storms", {
+            type: 'geojson',
+            data: "http://anthonymarze.com/assets/all_storms.geojson"
+        });
+        // map.addSource("all-storms", {
+        //     type: 'vector',
+        //     url: 'mapbox://anthonymarze.9g1zkmbb',
+        // });
         map.addSource("all-storm-sub-paths", {
             type: 'geojson',
-            data: "http://anthonymarze.com/assets/all_storm_sub_paths.geojson"
+            data: "http://anthonymarze.com/assets/all_storm_sub_paths.geojson",
+            buffer: 0
         });
         map.addSource('allDataPoints', {
             type: 'vector',
-            lineMetrics: true,
             url: 'mapbox://anthonymarze.849mm1vv',
         });
 
@@ -113,13 +117,17 @@ document.addEventListener("DOMContentLoaded", () => {
             "paint": {
                 "line-width": 4,
                 "line-color": ["get", "color"]
-            }
+            },
+            "layout": {
+                "visibility": "none"
+            },
         });
 
         map.addLayer({
             "id": "all-storms",
             "type": "line",
             "source": "all-storms",
+            // "source-layer": "all_storms-0gf7ox",
             "paint": {
                 "line-width": 4,
                 "line-color": [
@@ -143,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "id": "all-storms-highlighted",
             "type": "line",
             "source": "all-storms",
+            // "source-layer": "all_storms-0gf7ox",
             "paint": {
                 "line-width": 4,
                 "line-gap-width": 3,
@@ -152,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "visibility": "visible"
             },
             "filter": ["==", "serial_num", ""]
-        })
+        });
 
         map.addLayer({
             "id": "all-points",
@@ -175,8 +184,20 @@ document.addEventListener("DOMContentLoaded", () => {
             "layout": {
                 "visibility": "none"
             }
-        })
+        });
     });
+
+    map.on("mousemove", "all-points", e => {
+        map.getCanvas().style.cursor = "pointer";
+        let feature = e.features[0];
+
+        popup.setLngLat(e.lngLat);
+        popup.setHTML(`<h3>${feature.properties.name} (${feature.properties.season})</h3>`);
+        popup.addTo(map);
+
+        map.setFilter("all-points", ["==", "serial_num", `${feature.properties.serial_num}`]);
+        map.setLayoutProperty("all-points", "visibility", "visible");
+    })
 
     map.on("mousemove", "all-storms", (e) => {
         map.getCanvas().style.cursor = 'pointer';
@@ -200,12 +221,17 @@ document.addEventListener("DOMContentLoaded", () => {
         map.fitBounds(getMaxBounds(feature.geometry.coordinates), 
             { padding: { top: 150, bottom: 150, left: 150, right: 150 }});
 
-        document.getElementById("sample-name").innerHTML = `${feature.properties.name}`;
-        document.getElementById("sample-basin").innerHTML = `basin: ${basinNames(feature.properties.basin)}`;
+        document.getElementById("sample-serial-num").innerHTML = `${feature.properties.serial_num}`;
         document.getElementById("sample-season").innerHTML = `year: ${feature.properties.season}`;
+        document.getElementById("sample-num").innerHTML = `# storm of the year: ${feature.properties.num}`;
+        document.getElementById("sample-name").innerHTML = `${feature.properties.name}`;
+        document.getElementById("sample-nature").innerHTML = `nature: ${feature.properties.nature}`;
+        document.getElementById("sample-basin").innerHTML = `basin: ${basinNames(feature.properties.basin)}`;
+        document.getElementById("sample-sub-basin").innerHTML = `sub-basin: ${feature.properties.sub_basin}`;
         document.getElementById("sample-max-wind").innerHTML = `maximum windspeed: ${feature.properties.max_windspeed} knots`;
         document.getElementById("sample-min-pressure").innerHTML = `minimum pressure: ${feature.properties.min_pressure} millibars`;
-        document.getElementById("sample-coordinates").innerHTML = `coords: ${feature.geometry.coordinates}`;  
+        document.getElementById("sample-center").innerHTML = `recording center: ${feature.properties.center}`;
+        document.getElementById("sample-track-type").innerHTML = `track type: ${feature.properties.track_type}`;  
     })
 
     map.on("mouseleave", "all-storms", () => {
@@ -215,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const clickedUpdate = (e) => {
-        let val = event.target.innerHTML;
+        let val = e.target.innerHTML;
         e.preventDefault();
         e.stopPropagation();
 
@@ -233,14 +259,31 @@ document.addEventListener("DOMContentLoaded", () => {
                     colorizedPath(oneStormData);
                 }, 1000)
             }
+        } else if(val === "all-data-points") {
+            if (map.getLayoutProperty("all-points", "visibility") === "visible") {
+                map.setLayoutProperty("all-points", "visibility", "none");
+            } else {
+                map.setLayoutProperty("all-points", "visibility", "visible"); 
+            }
+        } else if(val === "detailed-paths"){
+            if(map.getLayoutProperty("all-storms", "visibility") === "visible") {
+                map.setLayoutProperty("all-storm-sub-paths", "visibility", "visible");
+                map.setLayoutProperty("all-points", "visibility", "visible");
+                map.setLayoutProperty("all-storms", "visibility", "none");
+            } else if (map.getLayoutProperty("all-storms", "visibility") === "none") {
+                map.setLayoutProperty("all-storms", "visibility", "visible");
+                map.setLayoutProperty("all-storm-sub-paths", "visibility", "none");
+                map.setLayoutProperty("all-points", "visibility", "none");
+            }
         } else if(!toggledVals.includes(val)) {
             toggledVals.push(val)
             let filter = ["in", "intensity"];
             toggledVals.forEach(tVal => {
                 filter.push(tVal)
             })
-            map.setFilter("all-storm-sub-paths", filter)
-            map.setFilter("all-storms", filter)
+            map.setFilter("all-storm-sub-paths", filter);
+            map.setFilter("all-storms", filter);
+            document.getElementById(`hi-${val}`).style.backgroundColor = intensityColor(val);
         } else {
             let valIdx = toggledVals.indexOf(val);
             toggledVals.splice(valIdx, 1);
@@ -248,14 +291,60 @@ document.addEventListener("DOMContentLoaded", () => {
             toggledVals.forEach(tVal => {
                 filter.push(tVal)
             })
-            map.setFilter("all-storm-sub-paths", filter)
-            map.setFilter("all-storms", filter)
+            map.setFilter("all-storm-sub-paths", filter);
+            map.setFilter("all-storms", filter);
+            document.getElementById(`hi-${val}`).style.backgroundColor = "#FFF";
         }
     }
 
     document.querySelectorAll(".update").forEach(item => {
         item.addEventListener("click", clickedUpdate);
     });
+
+    const seasonUpdate = (e) => {
+        let val = e.target.value;
+        e.preventDefault();
+        e.stopPropagation();
+
+        let filter = ["in", "season", parseInt(val)];
+        map.setFilter("all-storm-sub-paths", filter);
+        map.setFilter("all-storms", filter);
+        map.setFilter("all-points", filter);
+    }
+
+    document.querySelectorAll(".update-season").forEach(item => {
+        item.addEventListener("input", seasonUpdate);
+    });
+
+    const nameUpdate = (e) => {
+        let val = e.target.value;
+        e.preventDefault();
+        e.stopPropagation();
+
+        let filter = ["in", "name", val.toUpperCase()];
+        map.setFilter("all-storm-sub-paths", filter);
+        map.setFilter("all-storms", filter);
+        map.setFilter("all-points", filter);
+    }
+
+    document.querySelectorAll(".update-name").forEach(item => {
+        item.addEventListener("input", nameUpdate);
+    });
+
+    // const nameUpdate = (e) => {
+    //     let val = e.target.value;
+    //     e.preventDefault();
+    //     e.stopPropagation();
+
+    //     let filter = ["in", "name", val.toUpperCase()];
+    //     map.setFilter("all-storm-sub-paths", filter);
+    //     map.setFilter("all-storms", filter);
+    //     map.setFilter("all-points", filter);
+    // }
+
+    // document.querySelectorAll(".update-name").forEach(item => {
+    //     item.addEventListener("input", nameUpdate);
+    // });
 
     // map.on('load', () => {
     //     map.addLayer

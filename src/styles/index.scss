@@ -18,6 +18,40 @@ button::-moz-focus-inner {
   border: 0;
 }
 
+.basin-box {
+    text-align: center;
+    height: fit-content;
+    margin: 3%;
+}
+
+.basin {
+    text-align: center;
+    height: 50px;
+    font-size: 1.4em;
+    font-weight: 500;
+    font-family: 'Josefin Slab', serif;
+}
+
+
+.name-box {
+    text-align: center;
+    height: fit-content;
+    margin: 3%;
+}
+
+.name {
+    text-align: center;
+    height: 50px;
+    font-size: 1.4em;
+    font-weight: 500;
+    font-family: 'Josefin Slab', serif;
+}
+
+.name-label {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
 .root {
     height: 100%;
 }
@@ -75,6 +109,11 @@ button::-moz-focus-inner {
 .year-label {
     font-size: 1.5em;
     font-weight: 600;
+}
+
+#all-data-points {
+    width: 100px;
+    height: 50px;
 }
 
 #hi-5 {
@@ -135,7 +174,30 @@ button::-moz-focus-inner {
     justify-content: space-between;
 }
 
+#detailed-paths {
+    width: 100px;
+    height: 50px;
+}
+
 .update {
+    background-color: #ffffff;
+    border: 1px solid #696966;
+    outline: none !important;
+}
+
+.update-name {
+    background-color: #ffffff;
+    border: 1px solid #696966;
+    outline: none !important;
+}
+
+.update-season {
+    background-color: #ffffff;
+    border: 1px solid #696966;
+    outline: none !important;
+}
+
+.update-basin {
     background-color: #ffffff;
     border: 1px solid #696966;
     outline: none !important;

@@ -32,20 +32,44 @@
                         <button class="update" id ="hi-5">5</button>
                     </div>
                 </div>
+                <div class="basin-box">
+                    <label class="basin-label">ocean basin(s): </label>
+                    <select multiple>
+                        <option value="NA">North Atlantic</option>
+                        <option value="SA">South Atlantic</option>
+                        <option value="NI">North Indian</option>
+                        <option value="SI">South Indian</option>
+                        <option value="WP">West Pacific</option>
+                        <option value="EP">East Pacific</option>
+                        <option value="SP">South Pacific</option>
+                    </select>
+                    <input type="submit" class="update-basin basin">
+                </div>
+                <div class="name-box">
+                    <label class="name-label">name:</label>
+                    <input class="update-name name" type="text">
+                </div>
                 <div class="season-box">
                     <label class="year-label">year:</label>
-                    <input class="season" type="text">
+                    <input type="text" class="update-season season">
                 </div>
                 <div class="all-points">
+                    <button class="update" id="detailed-paths">detailed-paths</button>
+                    <button class="update" id="all-data-points">all-data-points</button>
                     <button class="update" id="colorized-path">colorized-path</button>
                 </div>    
                 <div class="title-box" id="detail-box">
+                    <p id="sample-serial-num"></p>
+                    <p id="sample-season"></p>
+                    <p id="sample-num"></p>
                     <h2 id="sample-name"></h2>
-                    <h3 id="sample-basin"></h3>
-                    <h3 id="sample-season"></h3>
-                    <h3 id="sample-max-wind"></h3>
-                    <h3 id="sample-min-pressure"></h3>
-                    <h3 id="sample-coordinates"></h3>
+                    <p id="sample-nature"></p>
+                    <p id="sample-basin"></p>
+                    <p id="sample-sub-basin"></p>
+                    <p id="sample-max-wind"></p>
+                    <p id="sample-min-pressure"></p>
+                    <p id="sample-center"></p>
+                    <p id="sample-track-type"></p>
                 </div>
             </div>
         </div>
