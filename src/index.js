@@ -14,6 +14,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     let startYear = parseInt(document.getElementById("start-year").value, 10);
+    let filter = ["all", 
+        ["in", "intensity", "TD", "TS", "1", "2", "3", "4", "5"], 
+        ["==", "season", startYear]
+    ];
+
     const intensityVals = ["TD", "TS", "1", "2", "3", "4", "5"];
     const toggledVals = ["TD", "TS", "1", "2", "3", "4", "5"];
     const years = [1848];
@@ -53,17 +58,17 @@ document.addEventListener("DOMContentLoaded", () => {
         map.setFilter("all-storm-sub-paths", ["==", "serial_num", `${feature.properties.serial_num}`]);
         map.setFilter("all-points", ["==", "serial_num", `${feature.properties.serial_num}`]);
 
-        document.getElementById("sample-serial-num").innerHTML = `${feature.properties.serial_num}`;
-        document.getElementById("sample-season").innerHTML = `year: ${feature.properties.season}`;
-        document.getElementById("sample-num").innerHTML = `# storm of the year: ${feature.properties.num}`;
-        document.getElementById("sample-name").innerHTML = `${feature.properties.name}`;
-        document.getElementById("sample-nature").innerHTML = `nature: ${feature.properties.nature}`;
+        // document.getElementById("sample-serial-num").innerHTML = `${feature.properties.serial_num}`;
+        document.getElementById("sample-name").innerHTML = `${feature.properties.name} (${feature.properties.season})`;
+        // document.getElementById("sample-season").innerHTML = `year: ${feature.properties.season}`;
+        document.getElementById("sample-num").innerHTML = `storm #${feature.properties.num} of the season`;
+        // document.getElementById("sample-nature").innerHTML = `nature: ${feature.properties.nature}`;
         document.getElementById("sample-basin").innerHTML = `basin: ${basinNames(feature.properties.basin)}`;
-        document.getElementById("sample-sub-basin").innerHTML = `sub-basin: ${feature.properties.sub_basin}`;
+        // document.getElementById("sample-sub-basin").innerHTML = `sub-basin: ${feature.properties.sub_basin}`;
         document.getElementById("sample-max-wind").innerHTML = `maximum windspeed: ${feature.properties.max_windspeed} knots`;
         document.getElementById("sample-min-pressure").innerHTML = `minimum pressure: ${feature.properties.min_pressure} millibars`;
-        document.getElementById("sample-center").innerHTML = `recording center: ${feature.properties.center}`;
-        document.getElementById("sample-track-type").innerHTML = `track type: ${feature.properties.track_type}`;
+        document.getElementById("sample-center").innerHTML = `recording center: ${feature.properties.center.toUpperCase()}`;
+        // document.getElementById("sample-track-type").innerHTML = `track type: ${feature.properties.track_type}`;
     }
 
     const popup = new mapboxgl.Popup({
@@ -350,21 +355,35 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("detailed-paths").style.backgroundColor = "#fff";
             }
         } else if(!toggledVals.includes(val)) {
-            toggledVals.push(val)
-            let filter = ["in", "intensity"];
+            toggledVals.push(val);
+            let newFilter = ["in", "intensity"];
             toggledVals.forEach(tVal => {
-                filter.push(tVal)
-            })
+                newFilter.push(tVal)
+            });
+
+            filter.forEach(val => {
+                if(val[1] === "intensity") {
+                    filter[filter.indexOf(val)] = newFilter;
+                }
+            });
+
             map.setFilter("all-storm-sub-paths", filter);
             map.setFilter("all-storms", filter);
             document.getElementById(`hi-${val}`).style.backgroundColor = intensityColor(val);
         } else {
             let valIdx = toggledVals.indexOf(val);
             toggledVals.splice(valIdx, 1);
-            let filter = ["in", "intensity"];
+            let newFilter = ["in", "intensity"];
             toggledVals.forEach(tVal => {
-                filter.push(tVal)
-            })
+                newFilter.push(tVal)
+            });
+
+            filter.forEach(val => {
+                if (val[1] === "intensity") {
+                    filter[filter.indexOf(val)] = newFilter;
+                }
+            });
+
             map.setFilter("all-storm-sub-paths", filter);
             map.setFilter("all-storms", filter);
             document.getElementById(`hi-${val}`).style.backgroundColor = "#FFF";
@@ -391,7 +410,20 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         e.stopPropagation();
 
-        let filter = ["in", "season", parseInt(val)];
+        let hasSeason = false;
+        let newFilter = ["in", "season", parseInt(val)];
+
+        filter.forEach(val => {
+            if (val[1] === "season") {
+                filter[filter.indexOf(val)] = newFilter;
+                hasSeason = true;
+            }
+        });
+
+        if(!hasSeason) {
+            filter.push(newFilter);
+        };
+
         map.setFilter("all-storm-sub-paths", filter);
         map.setFilter("all-storms", filter);
         map.setFilter("all-points", filter);
@@ -406,7 +438,20 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         e.stopPropagation();
 
-        let filter = ["in", "name", val.toUpperCase()];
+        let hasName = false;
+        let newFilter = ["in", "name", val.toUpperCase()];
+
+        filter.forEach(val => {
+            if (val[1] === "name") {
+                filter[filter.indexOf(val)] = newFilter;
+                hasName = true;
+            }
+        });
+
+        if (!hasName) {
+            filter.push(newFilter);
+        };
+
         map.setFilter("all-storm-sub-paths", filter);
         map.setFilter("all-storms", filter);
         map.setFilter("all-points", filter);
