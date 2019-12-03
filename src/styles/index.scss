@@ -18,12 +18,6 @@ button::-moz-focus-inner {
   border: 0;
 }
 
-.basin-box {
-    text-align: center;
-    height: fit-content;
-    margin: 3%;
-}
-
 .basin {
     text-align: center;
     height: 50px;
@@ -32,11 +26,22 @@ button::-moz-focus-inner {
     font-family: 'Josefin Slab', serif;
 }
 
-
-.name-box {
+.basin-box {
     text-align: center;
     height: fit-content;
     margin: 3%;
+}
+
+.intensity-display {
+    text-align: center;
+    height: 20%;
+    width: 100%;
+}
+
+.intensity-inputs {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .name {
@@ -45,6 +50,12 @@ button::-moz-focus-inner {
     font-size: 1.4em;
     font-weight: 500;
     font-family: 'Josefin Slab', serif;
+}
+
+.name-box {
+    text-align: center;
+    height: fit-content;
+    margin: 3%;
 }
 
 .name-label {
@@ -63,12 +74,6 @@ button::-moz-focus-inner {
     flex-direction: row;
 }
 
-.season-box {
-    text-align: center;
-    height: fit-content;
-    margin: 3%;
-}
-
 .season {
     text-align: center;
     height: 50px;
@@ -77,10 +82,19 @@ button::-moz-focus-inner {
     font-family: 'Josefin Slab', serif;
 }
 
+.season-box {
+    text-align: center;
+    height: fit-content;
+    margin: 3%;
+}
+
 .side-inputs {
     background-color: #f2eee8;
     width: 30%;
     height: 100%;
+    display: flex;
+    align-content: space-between;
+    flex-direction: column;
 }
 
 .title-box {
@@ -94,16 +108,30 @@ button::-moz-focus-inner {
     text-align: center;
 }
 
-.intensity-display {
-    text-align: center;
-    height: 20%;
-    width: 100%;
+.update {
+    width: 50px;
+    height: 50px;
+    background-color: #ffffff;
+    border: 1px solid #696966;
+    outline: none !important;
 }
 
-.intensity-inputs {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+.update-name {
+    background-color: #ffffff;
+    border: 1px solid #696966;
+    outline: none !important;
+}
+
+.update-season {
+    background-color: #ffffff;
+    border: 1px solid #696966;
+    outline: none !important;
+}
+
+.update-basin {
+    background-color: #ffffff;
+    border: 1px solid #696966;
+    outline: none !important;
 }
 
 .year-label {
@@ -112,6 +140,18 @@ button::-moz-focus-inner {
 }
 
 #all-data-points {
+    width: 100px;
+    height: 50px;
+}
+
+#detail-box {
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#detailed-paths {
     width: 100px;
     height: 50px;
 }
@@ -148,68 +188,16 @@ button::-moz-focus-inner {
     border-bottom-left-radius: 5px;
 }
 
-.all-points {
-    text-align: center;
-}
-
 #map {
     width: 70%;
     height: 100%;
 }
 
-.update {
-    width: 50px;
-    height: 50px;
+#saffir-link {
+    text-decoration: none;
+    color: #568dcc;
 }
 
-#colorized-path {
-    width: 100px;
-    height: 50px;
-}
-
-#detail-box {
-    height: 40%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-#detailed-paths {
-    width: 100px;
-    height: 50px;
-}
-
-.update {
-    background-color: #ffffff;
-    border: 1px solid #696966;
-    outline: none !important;
-}
-
-.update-name {
-    background-color: #ffffff;
-    border: 1px solid #696966;
-    outline: none !important;
-}
-
-.update-season {
-    background-color: #ffffff;
-    border: 1px solid #696966;
-    outline: none !important;
-}
-
-.update-basin {
-    background-color: #ffffff;
-    border: 1px solid #696966;
-    outline: none !important;
-}
-
-.update:hover {
-    cursor: pointer;
-    background-color: #cccccc;
-}
-
-.side-inputs {
-    display: flex;
-    align-content: space-between;
-    flex-direction: column;
+#saffir-link:hover {
+    color: #155196;
 }

@@ -21,7 +21,13 @@
                     <h3>Worldwide Tropcial Cyclone data from 1848-2019</h3>
                 </div>
                 <div class="intensity-display">
-                    <h3>Max Intensity (based on Saffir-Simpson scale)</h3>
+                    <h3>Max Intensity (based on 
+                        <a href="https://en.wikipedia.org/wiki/Saffir%E2%80%93Simpson_scale" 
+                            target="_" 
+                            id="saffir-link">
+                            Saffir-Simpson scale
+                        </a>)
+                    </h3>
                     <div class="intensity-inputs">
                         <button class="update" id ="hi-TD">TD</button>
                         <button class="update" id ="hi-TS">TS</button>
@@ -46,16 +52,23 @@
                 </div>
                 <div class="name-box">
                     <label class="name-label">name:</label>
-                    <input class="update-name name" type="text">
+                    <input class="update-name name"
+                        type="text">
                 </div>
                 <div class="season-box">
                     <label class="year-label">year:</label>
-                    <input type="number" name="points" min="1848" max="2019" step="1" value="2000" class="update-season season">
+                    <input type="number"
+                        name="points"
+                        min="1848"
+                        max="2019"
+                        step="1"
+                        value="2000"
+                        class="update-season season"
+                        id="start-year">
                 </div>
                 <div class="all-points">
-                    <button class="update" id="detailed-paths">detailed-paths</button>
-                    <button class="update" id="all-data-points">all-data-points</button>
-                    <button class="update" id="colorized-path">colorized-path</button>
+                    <button class="update"
+                        id="detailed-paths">detailed-paths</button>
                 </div>    
                 <div class="title-box" id="detail-box">
                     <p id="sample-serial-num"></p>
