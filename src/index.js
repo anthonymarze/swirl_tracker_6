@@ -354,6 +354,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 map.setLayoutProperty("all-points", "visibility", "none");
                 document.getElementById("detailed-paths").style.backgroundColor = "#fff";
             }
+        } else if(val === "reset-fields") {
+            filter = ["all",
+                ["in", "intensity", "TD", "TS", "1", "2", "3", "4", "5"],
+                ["==", "season", startYear]
+            ];
+            map.setFilter("all-storm-sub-paths", filter);
+            map.setFilter("all-storms", filter);
+            map.setFilter("all-points", filter);
+            document.getElementById("start-year").value = "2000";
+            document.getElementById("name-input").value = "";
+
         } else if(!toggledVals.includes(val)) {
             toggledVals.push(val);
             let newFilter = ["in", "intensity"];
@@ -369,6 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             map.setFilter("all-storm-sub-paths", filter);
             map.setFilter("all-storms", filter);
+            map.setFilter("all-points", filter);
             document.getElementById(`hi-${val}`).style.backgroundColor = intensityColor(val);
         } else {
             let valIdx = toggledVals.indexOf(val);
@@ -386,6 +398,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             map.setFilter("all-storm-sub-paths", filter);
             map.setFilter("all-storms", filter);
+            map.setFilter("all-points", filter);
             document.getElementById(`hi-${val}`).style.backgroundColor = "#FFF";
         }
     }
@@ -440,7 +453,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let hasName = false;
         let newFilter = ["in", "name", val.toUpperCase()];
-
+        
+        // if val=""
         filter.forEach(val => {
             if (val[1] === "name") {
                 filter[filter.indexOf(val)] = newFilter;
