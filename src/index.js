@@ -454,11 +454,15 @@ document.addEventListener("DOMContentLoaded", () => {
         let hasName = false;
         let newFilter = ["in", "name", val.toUpperCase()];
         
-        // if val=""
-        filter.forEach(val => {
-            if (val[1] === "name") {
-                filter[filter.indexOf(val)] = newFilter;
-                hasName = true;
+        filter.forEach(ele => {
+            if (ele[1] === "name") {
+                if (val === "") {
+                    filter.splice(filter.indexOf(ele), 1);
+                    hasName = true;
+                } else {
+                    filter[filter.indexOf(ele)] = newFilter;
+                    hasName = true;
+                }
             }
         });
 
