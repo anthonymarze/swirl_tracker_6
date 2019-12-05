@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
         ["in", "intensity", "TD", "TS", "1", "2", "3", "4", "5"], 
         ["==", "season", startYear]
     ];
+    
+    let selected = "";
 
     const intensityVals = ["TD", "TS", "1", "2", "3", "4", "5"];
     const toggledVals = ["TD", "TS", "1", "2", "3", "4", "5"];
@@ -74,86 +76,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const popup = new mapboxgl.Popup({
         closeButton: false
     });
-    let selected = "";
-
-    const colorizedPath = (path) => {
-        let counter = 1;
-        
-
-        path.slice(1).forEach(point => {
-            let coords = [];
-            coords.push(path[counter - 1].geometry.coordinates);
-            coords.push(path[counter].geometry.coordinates);
-
-            let geojson = {
-                "type": "FeatureCollection",
-                "features": [{
-                    "type": "Feature",
-                    "properties": {},
-                    "geometry": {
-                        "coordinates": coords,
-                        "type": "LineString"
-                    }
-                }]
-            };
-
-            map.addSource(`${path[0].properties.serial_num}-${counter}`, {
-                type: 'geojson',
-                lineMetrics: true,
-                data: datar
-            });
-
-            counter += 1;
-        })
-
-        counter = 1;
-
-        path.slice(1).forEach(point => {
-            console.log(intensityCalculator(path[counter - 1].properties.wind, "color"));
-            
-            map.addLayer({
-                "type": 'line',
-                "source": `${path[0].properties.serial_num}-${counter}`,
-                "id": `${path[0].properties.serial_num}-${counter}`,
-                "paint": {
-                    "line-width": 3,
-                    "line-gradient": [
-                        "interpolate",
-                        ["linear"],
-                        ["line-progress"],
-                        0, intensityCalculator(path[counter - 1].properties.wind, "color"),
-                        1, intensityCalculator(path[counter].properties.wind, "color")
-                    ]
-                },
-                "layout": {
-                    "line-cap": "round",
-                    "line-join": "round"
-                }
-            });
-            counter += 1;
-        })
-    }
 
     map.on('load', () => {
         
         map.addControl(new mapboxgl.NavigationControl());
         map.addSource("all-storms", {
             type: 'geojson',
-            data: "http://anthonymarze.com/assets/all_storms.geojson"
+            data: "https://anthonymarze.com/assets/all_storms.geojson"
         });
-        // map.addSource("all-storms", {
-        //     type: 'vector',
-        //     url: 'mapbox://anthonymarze.9g1zkmbb',
-        // });
+
         map.addSource("all-storm-sub-paths", {
             type: 'geojson',
-            data: "http://anthonymarze.com/assets/all_storm_sub_paths.geojson",
+            data: "https://anthonymarze.com/assets/all_storm_sub_paths.geojson",
             buffer: 0
         });
 
-        map.addSource('all-points', {
-            type: 'vector',
-            url: 'mapbox://anthonymarze.849mm1vv',
+        map.addSource("all-points", {
+            type: 'geojson',
+            data: "https://anthonymarze.com/assets/all_storm_data_points.geojson"
         });
 
         map.addLayer({
@@ -216,7 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
             "id": "all-points",
             "type": "circle",
             "source": "all-points",
-            "source-layer": "mapbox_storm_data-17ruvm",
             "paint": {
                 "circle-color": [
                     'step',
@@ -231,16 +170,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 ]
             },
             "layout": {
-                "visibility": "none"
+                "visibility": "visible"
             },
             "filter": ["==", "season", startYear]
-        });
+        })
 
         map.addLayer({
             "id": "all-points-highlighted",
             "type": "circle",
             "source": "all-points",
-            "source-layer": "mapbox_storm_data-17ruvm",
             "paint": {
                 "circle-color": [
                     'step',
@@ -322,33 +260,14 @@ document.addEventListener("DOMContentLoaded", () => {
         e.stopPropagation();
         const val = e.target.innerHTML;
 
-        if(val === "colorized-path"){
-            if(selected === ""){
-                return
-            } else {
-                map.setFilter("all-points", ["==", "serial_num", selected]);
-                map.setLayoutProperty("all-points", "visibility", "visible");
-                setTimeout(() => {
-                    let oneStormData = map.querySourceFeatures('allDataPoints', {
-                    sourceLayer: "mapbox_storm_data-17ruvm",
-                    filter: ["==", "serial_num", selected]
-                    });
-                    colorizedPath(oneStormData);
-                }, 1000)
-            }
-        } else if(val === "all-data-points") {
-            if (map.getLayoutProperty("all-points", "visibility") === "visible") {
-                map.setLayoutProperty("all-points", "visibility", "none");
-            } else {
-                map.setLayoutProperty("all-points", "visibility", "visible"); 
-            }
-        } else if(val === "detailed-paths"){
+        if (val === "detailed-paths") {
             if(map.getLayoutProperty("all-storms", "visibility") === "visible") {
                 map.setLayoutProperty("all-storm-sub-paths", "visibility", "visible");
                 map.setLayoutProperty("all-points", "visibility", "visible");
                 map.setLayoutProperty("all-storms", "visibility", "none");
                 document.getElementById("detailed-paths").style.backgroundColor = "#e6e6e6";
-            } else if (map.getLayoutProperty("all-storms", "visibility") === "none") {
+            } 
+            else if (map.getLayoutProperty("all-storms", "visibility") === "none") {
                 map.setLayoutProperty("all-storms", "visibility", "visible");
                 map.setLayoutProperty("all-storm-sub-paths", "visibility", "none");
                 map.setLayoutProperty("all-points", "visibility", "none");
@@ -493,26 +412,4 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".update-basin").forEach(item => {
         item.addEventListener("change", basinUpdate);
     });
-
-    // map.on('load', () => {
-    //     map.addLayer
-    // })
-
-    // const download = (filename, text)=> {
-    //     var element = document.createElement('a');
-    //     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    //     element.setAttribute('download', filename);
-
-    //     element.style.display = 'none';
-    //     document.body.appendChild(element);
-
-    //     element.click();
-
-    //     document.body.removeChild(element);
-    // };
-
-    // download("test.txt", createGeoJSON(stormTestList));
-
-    // const stormList = document.createElement("ul");
-    // const stormDiv = document.getElementById("storm-list");
 });
