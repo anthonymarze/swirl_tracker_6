@@ -8,7 +8,7 @@
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
     <link href="https://fonts.googleapis.com/css?family=Josefin+Slab&display=swap" rel="stylesheet"/>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
-    <link rel="stylesheet" type="text/css" href="dist/main.css">
+    <link rel="stylesheet" type="text/css" href="dist/main.css?<?php echo date('l jS \of F Y h:i:s A'); ?>">
 </head>
 <body>
     <script type="module" src="./dist/main.js"></script>
@@ -17,7 +17,8 @@
             <div id='map'></div>
             <div class = "side-inputs">
                 <div class="title-box">
-                    <h1>Swirl Tracker 6</h1><br/>
+                    <!-- Swirl Tracker 6 -->
+                    <h1>Swirl Tracker 6</h1>
                     <h3>Worldwide Tropcial Cyclone data</h3>
                     <h3>(1848-2017)</h3>
                 </div>

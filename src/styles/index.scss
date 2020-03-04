@@ -104,6 +104,8 @@ button::-moz-focus-inner {
 }
 
 .title-box {
+    display: block;
+    min-height: 170px;
     z-index: 1;
     margin: 5%;
     width: 90%;
@@ -112,6 +114,9 @@ button::-moz-focus-inner {
     border: 0px;
     border-radius: 10px;
     text-align: center;
+    overflow: hidden;
+    text-overflow: clip;
+    word-wrap: break-word;
 }
 
 .update {
