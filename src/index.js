@@ -85,16 +85,16 @@ document.addEventListener("DOMContentLoaded", () => {
             data: "https://anthonymarze.com/assets/all_storms.geojson"
         });
 
-        map.addSource("all-storm-sub-paths", {
-            type: 'geojson',
-            data: "https://anthonymarze.com/assets/all_storm_sub_paths.geojson",
-            buffer: 0
-        });
+        // map.addSource("all-storm-sub-paths", {
+        //     type: 'geojson',
+        //     data: "https://anthonymarze.com/assets/all_storm_sub_paths.geojson",
+        //     buffer: 0
+        // });
 
-        map.addSource("all-points", {
-            type: 'geojson',
-            data: "https://anthonymarze.com/assets/all_storm_data_points.geojson"
-        });
+        // map.addSource("all-points", {
+        //     type: 'geojson',
+        //     data: "https://anthonymarze.com/assets/all_storm_data_points.geojson"
+        // });
 
         map.addLayer({
             "id": "all-storm-sub-paths",
@@ -283,6 +283,11 @@ document.addEventListener("DOMContentLoaded", () => {
             map.setFilter("all-points", filter);
             document.getElementById("start-year").value = "2000";
             document.getElementById("name-input").value = "";
+            let detailBox = document.getElementById("detail-box");
+            let child = detailBox.lastChild;
+            while(child) {
+                detailBox.removeChild(detailBox.firstChild)
+            }
 
         } else if(!toggledVals.includes(val)) {
             toggledVals.push(val);
