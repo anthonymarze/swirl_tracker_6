@@ -289,6 +289,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 detailBox.removeChild(detailBox.firstChild)
             }
 
+            map.flyTo({
+                zoom: 3,
+                center: [-77.38, 39]
+            });
+
         } else if(!toggledVals.includes(val)) {
             toggledVals.push(val);
             let newFilter = ["in", "intensity"];
