@@ -3,6 +3,9 @@ import mapboxgl from 'mapbox-gl';
 import { intensityCalculator, intensityColor } from './scripts/intensity_calculator.js';
 import { basinNames } from './scripts/basin_names';
 import { getMaxBounds } from './scripts/get_max_bounds';
+import filterAll from './filterAll.js';
+import loadAllPoints from './loadAllPoints.js';
+import loadAllStorms from './loadAllStorms.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     mapboxgl.accessToken = 'pk.eyJ1IjoiYW50aG9ueW1hcnplIiwiYSI6ImNrMjZoOWU0MzBnOHMzbG8wZDN1NzByYnQifQ.Yb4cvywiiVs1hvKcTHCnAA';
@@ -110,29 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "filter": ["==", "season", startYear]
         });
 
-        map.addLayer({
-            "id": "all-storms",
-            "type": "line",
-            "source": "all-storms",
-            "paint": {
-                "line-width": 4,
-                "line-color": [
-                    'step',
-                    ["get", "max_windspeed"],
-                    "#5ebaff",
-                    34, "#00faf4",
-                    64, "#ffffcc",
-                    83, "#ffe775",
-                    96, "#ffc140",
-                    113, "#ff8f20",
-                    137, "#ff6060"
-                ]
-            },
-            "layout": {
-                "visibility": "visible"
-            },
-            "filter": ["==", "season", startYear]
-        });
+        loadAllStorms(map, startYear);
 
         map.addLayer({
             "id": "all-storms-highlighted",
@@ -152,28 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "all-storms"
         );
 
-        map.addLayer({
-            "id": "all-points",
-            "type": "circle",
-            "source": "all-points",
-            "paint": {
-                "circle-color": [
-                    'step',
-                    ["get", "wind"],
-                    "#5ebaff",
-                    34, "#00faf4",
-                    64, "#ffffcc",
-                    83, "#ffe775",
-                    96, "#ffc140",
-                    113, "#ff8f20",
-                    137, "#ff6060"
-                ]
-            },
-            "layout": {
-                "visibility": "visible"
-            },
-            "filter": ["==", "season", startYear]
-        })
+        loadAllPoints(map, startYear);
 
         map.addLayer({
             "id": "all-points-highlighted",
@@ -278,9 +238,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 ["in", "intensity", "TD", "TS", "1", "2", "3", "4", "5"],
                 ["==", "season", startYear]
             ];
-            map.setFilter("all-storm-sub-paths", filter);
-            map.setFilter("all-storms", filter);
-            map.setFilter("all-points", filter);
+            filterAll(map, filter);
+            map.setLayoutProperty("all-storms", "visibility", "visible");
+            map.setLayoutProperty("all-storm-sub-paths", "visibility", "none");
+            map.setLayoutProperty("all-points", "visibility", "none");
+            document.getElementById("detailed-paths").style.backgroundColor = "#fff";
             document.getElementById("start-year").value = "2000";
             document.getElementById("name-input").value = "";
             let detailBox = document.getElementById("detail-box");
@@ -307,9 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            map.setFilter("all-storm-sub-paths", filter);
-            map.setFilter("all-storms", filter);
-            map.setFilter("all-points", filter);
+            filterAll(map, filter);
             document.getElementById(`hi-${val}`).style.backgroundColor = intensityColor(val);
         } else {
             let valIdx = toggledVals.indexOf(val);
@@ -325,9 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            map.setFilter("all-storm-sub-paths", filter);
-            map.setFilter("all-storms", filter);
-            map.setFilter("all-points", filter);
+            filterAll(map, filter);
             document.getElementById(`hi-${val}`).style.backgroundColor = "#FFF";
         }
     }
@@ -366,9 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
             filter.push(newFilter);
         };
 
-        map.setFilter("all-storm-sub-paths", filter);
-        map.setFilter("all-storms", filter);
-        map.setFilter("all-points", filter);
+        filterAll(map, filter);
     }
 
     document.querySelectorAll(".update-season").forEach(item => {
