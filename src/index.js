@@ -9,6 +9,7 @@ import loadAllStorms from './mapFeatures/loadAllStorms.js';
 import loadAllStormsHighlighted from './mapFeatures/loadAllStormsHighlighted.js';
 import loadAllStormSubPaths from './mapFeatures/loadAllStormSubPaths.js';
 import loadAllPointsHighlighted from './mapFeatures/loadAllPointsHighlighted.js';
+import toggleAllStormsVisibility from './toggleAllStormsVisibility.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     mapboxgl.accessToken = 'pk.eyJ1IjoiYW50aG9ueW1hcnplIiwiYSI6ImNrMjZoOWU0MzBnOHMzbG8wZDN1NzByYnQifQ.Yb4cvywiiVs1hvKcTHCnAA';
@@ -58,9 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // map.setFilter("all-storms", ["==", "serial_num", `${feature.properties.serial_num}`]);
         // map.setFilter("all-points", ["==", "serial_num", `${feature.properties.serial_num}`]);
 
-        map.setLayoutProperty("all-storm-sub-paths", "visibility", "visible");
-        map.setLayoutProperty("all-points", "visibility", "visible")
-        map.setLayoutProperty("all-storms", "visibility", "none");
+        toggleAllStormsVisibility("visible");
 
         map.setFilter("all-storms", ["==", "serial_num", `${feature.properties.serial_num}`]);
         map.setFilter("all-storm-sub-paths", ["==", "serial_num", `${feature.properties.serial_num}`]);
@@ -176,15 +175,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (val === "detailed-paths") {
             if(map.getLayoutProperty("all-storms", "visibility") === "visible") {
-                map.setLayoutProperty("all-storm-sub-paths", "visibility", "visible");
-                map.setLayoutProperty("all-points", "visibility", "visible");
-                map.setLayoutProperty("all-storms", "visibility", "none");
+                toggleAllStormsVisibility("none");
                 document.getElementById("detailed-paths").style.backgroundColor = "#e6e6e6";
             } 
             else if (map.getLayoutProperty("all-storms", "visibility") === "none") {
-                map.setLayoutProperty("all-storms", "visibility", "visible");
-                map.setLayoutProperty("all-storm-sub-paths", "visibility", "none");
-                map.setLayoutProperty("all-points", "visibility", "none");
+                toggleAllStormsVisibility("visible");
                 document.getElementById("detailed-paths").style.backgroundColor = "#fff";
             }
         } else if(val === "reset-fields") {
@@ -193,9 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ["==", "season", startYear]
             ];
             filterAll(map, filter);
-            map.setLayoutProperty("all-storms", "visibility", "visible");
-            map.setLayoutProperty("all-storm-sub-paths", "visibility", "none");
-            map.setLayoutProperty("all-points", "visibility", "none");
+            toggleAllStormsVisibility("visible");
             document.getElementById("detailed-paths").style.backgroundColor = "#fff";
             document.getElementById("start-year").value = "2000";
             document.getElementById("name-input").value = "";
@@ -309,9 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
             filter.push(newFilter);
         };
 
-        map.setFilter("all-storm-sub-paths", filter);
-        map.setFilter("all-storms", filter);
-        map.setFilter("all-points", filter);
+        filterAll(map, filter);
     }
 
     document.querySelectorAll(".update-name").forEach(item => {
@@ -324,9 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.stopPropagation();
 
         let filter = ["in", "basin", val];
-        map.setFilter("all-storm-sub-paths", filter);
-        map.setFilter("all-storms", filter);
-        map.setFilter("all-points", filter);
+        filterAll(map, filter);
     }
 
     document.querySelectorAll(".update-basin").forEach(item => {
