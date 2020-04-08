@@ -4,8 +4,11 @@ import { intensityCalculator, intensityColor } from './scripts/intensity_calcula
 import { basinNames } from './scripts/basin_names';
 import { getMaxBounds } from './scripts/get_max_bounds';
 import filterAll from './filterAll.js';
-import loadAllPoints from './loadAllPoints.js';
-import loadAllStorms from './loadAllStorms.js';
+import loadAllPoints from './mapFeatures/loadAllPoints.js';
+import loadAllStorms from './mapFeatures/loadAllStorms.js';
+import loadAllStormsHighlighted from './mapFeatures/loadAllStormsHighlighted.js';
+import loadAllStormSubPaths from './mapFeatures/loadAllStormSubPaths.js';
+import loadAllPointsHighlighted from './mapFeatures/loadAllPointsHighlighted.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     mapboxgl.accessToken = 'pk.eyJ1IjoiYW50aG9ueW1hcnplIiwiYSI6ImNrMjZoOWU0MzBnOHMzbG8wZDN1NzByYnQifQ.Yb4cvywiiVs1hvKcTHCnAA';
@@ -99,64 +102,15 @@ document.addEventListener("DOMContentLoaded", () => {
         //     data: "https://anthonymarze.com/assets/all_storm_data_points.geojson"
         // });
 
-        map.addLayer({
-            "id": "all-storm-sub-paths",
-            "type": "line",
-            "source": "all-storm-sub-paths",
-            "paint": {
-                "line-width": 4,
-                "line-color": ["get", "color"]
-            },
-            "layout": {
-                "visibility": "none"
-            },
-            "filter": ["==", "season", startYear]
-        });
+        loadAllStormSubPaths(map, startYear);
 
         loadAllStorms(map, startYear);
 
-        map.addLayer({
-            "id": "all-storms-highlighted",
-            "type": "line",
-            "source": "all-storms",
-            "paint": {
-                "line-width": 10,
-                "line-gap-width": 3,
-                "line-blur": 15,
-                "line-color": "#696969"
-            },
-            "layout": {
-                "visibility": "visible"
-            },
-            "filter": ["==", "serial_num", ""]
-        },
-        "all-storms"
-        );
+        loadAllStormsHighlighted(map);
 
         loadAllPoints(map, startYear);
 
-        map.addLayer({
-            "id": "all-points-highlighted",
-            "type": "circle",
-            "source": "all-points",
-            "paint": {
-                "circle-color": [
-                    'step',
-                    ["get", "wind"],
-                    "#5ebaff",
-                    34, "#00faf4",
-                    64, "#ffffcc",
-                    83, "#ffe775",
-                    96, "#ffc140",
-                    113, "#ff8f20",
-                    137, "#ff6060"
-                ],
-                "circle-blur": 15
-            },
-            "layout": {
-                "visibility": "none"
-            }
-        });
+        loadAllPointsHighlighted(map);
     });
 
     map.on("mousemove", "all-points", e => {
