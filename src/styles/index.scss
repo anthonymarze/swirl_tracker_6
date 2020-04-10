@@ -183,30 +183,72 @@ button::-moz-focus-inner {
     border-bottom-right-radius: 5px;
 }
 
+#hi-5:hover {
+    opacity: 0.5;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
 #hi-4 {
     background-color: #ff8f20;
+}
+
+#hi-4:hover {
+    opacity: 0.5;
+    border: 1px solid black;
+    cursor: pointer;
 }
 
 #hi-3 {
     background-color: #ffc140;
 }
 
+#hi-3:hover {
+    opacity: 0.5;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
 #hi-2 {
     background-color: #ffe775;
+}
+
+#hi-2:hover {
+    opacity: 0.5;
+    border: 1px solid black;
+    cursor: pointer;
 }
 
 #hi-1 {
     background-color: #ffffcc;
 }
 
+#hi-1:hover {
+    opacity: 0.5;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
 #hi-TS {
     background-color: #00faf4;
+}
+
+#hi-TS:hover {
+    opacity: 0.5;
+    border: 1px solid black;
+    cursor: pointer;
 }
 
 #hi-TD {
     background-color: #5ebaff;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
+}
+
+#hi-TD:hover {
+    opacity: 0.5;
+    border: 1px solid black;
+    cursor: pointer;
 }
 
 #map {
@@ -219,6 +261,11 @@ button::-moz-focus-inner {
     height: 50px;
     display: block;
     top: 0;
+}
+
+#reset-fields:hover {
+    cursor: pointer;
+    background-color: #eeeeee;
 }
 
 

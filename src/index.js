@@ -186,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if(val === "reset-fields") {
 
             //not sure what is happending with setTimeout here
-            
+
             setTimeout(
                 map.flyTo({
                 zoom: 3,
@@ -328,4 +328,27 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".update-basin").forEach(item => {
         item.addEventListener("change", basinUpdate);
     });
+
+    document.getElementById("detailed-paths").addEventListener("mouseover", 
+        (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            e.target.style.background = "#eeeeee";
+            e.target.style.cursor = "pointer";
+        }
+    )
+
+    document.getElementById("detailed-paths").addEventListener("mouseleave",
+        (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (map.getLayoutProperty("all-storms", "visibility") === "none") {
+                e.target.style.background = "#e6e6e6";
+            } else {
+                e.target.style.background = "#fff";
+            }
+            
+            e.target.style.cursor = "none";
+        }
+    )
 });
