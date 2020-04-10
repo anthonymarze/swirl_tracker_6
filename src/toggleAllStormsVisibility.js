@@ -1,4 +1,4 @@
-export default function toggleAllStormsVisibility(visibility) {
+export default function toggleAllStormsVisibility(map, visibility) {
     let opposite;
     if(visibility === "visible") {
         opposite = "none";

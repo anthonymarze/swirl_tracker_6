@@ -20,7 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
         zoom: 3
     });
 
-    let startYear = parseInt(document.getElementById("start-year").value, 10);
+    // let startYear = parseInt(document.getElementById("start-year").value, 10);
+    let startYear = 2000;
     let filter = ["all", 
         ["in", "intensity", "TD", "TS", "1", "2", "3", "4", "5"], 
         ["==", "season", startYear]
@@ -59,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // map.setFilter("all-storms", ["==", "serial_num", `${feature.properties.serial_num}`]);
         // map.setFilter("all-points", ["==", "serial_num", `${feature.properties.serial_num}`]);
 
-        toggleAllStormsVisibility("visible");
+        toggleAllStormsVisibility(map, "visible");
 
         map.setFilter("all-storms", ["==", "serial_num", `${feature.properties.serial_num}`]);
         map.setFilter("all-storm-sub-paths", ["==", "serial_num", `${feature.properties.serial_num}`]);
@@ -175,20 +176,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (val === "detailed-paths") {
             if(map.getLayoutProperty("all-storms", "visibility") === "visible") {
-                toggleAllStormsVisibility("none");
+                toggleAllStormsVisibility(map, "none");
                 document.getElementById("detailed-paths").style.backgroundColor = "#e6e6e6";
             } 
             else if (map.getLayoutProperty("all-storms", "visibility") === "none") {
-                toggleAllStormsVisibility("visible");
+                toggleAllStormsVisibility(map, "visible");
                 document.getElementById("detailed-paths").style.backgroundColor = "#fff";
             }
         } else if(val === "reset-fields") {
+
+            //not sure what is happending with setTimeout here
+            
+            setTimeout(
+                map.flyTo({
+                zoom: 3,
+                center: [-77.38, 39],
+                essential: true
+                })
+            , 5000);
+
             filter = ["all",
                 ["in", "intensity", "TD", "TS", "1", "2", "3", "4", "5"],
                 ["==", "season", startYear]
             ];
             filterAll(map, filter);
-            toggleAllStormsVisibility("visible");
+            toggleAllStormsVisibility(map, "visible");
             document.getElementById("detailed-paths").style.backgroundColor = "#fff";
             document.getElementById("start-year").value = "2000";
             document.getElementById("name-input").value = "";
@@ -197,11 +209,6 @@ document.addEventListener("DOMContentLoaded", () => {
             while(child) {
                 detailBox.removeChild(detailBox.firstChild)
             }
-
-            map.flyTo({
-                zoom: 3,
-                center: [-77.38, 39]
-            });
 
         } else if(!toggledVals.includes(val)) {
             toggledVals.push(val);
