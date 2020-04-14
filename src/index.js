@@ -29,12 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
     
     let selected = "";
 
-    const intensityVals = ["TD", "TS", "1", "2", "3", "4", "5"];
+    // const intensityVals = ["TD", "TS", "1", "2", "3", "4", "5"];
     const toggledVals = ["TD", "TS", "1", "2", "3", "4", "5"];
-    const years = [1848];
-    for(let i = 1851; i < 2020; i++) {
+    const years = [];
+    for(let i = 2000; i < 2018; i++) {
         years.push(i);
     }
+
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     // var sel = document.getElementById('selDemo');
     // var opt = document.createElement('option');
@@ -60,7 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // map.setFilter("all-storms", ["==", "serial_num", `${feature.properties.serial_num}`]);
         // map.setFilter("all-points", ["==", "serial_num", `${feature.properties.serial_num}`]);
 
-        toggleAllStormsVisibility(map, "visible");
+        // if (map.getLayoutProperty("all-storms", "visibility") === "visible") {
+        //     toggleAllStormsVisibility(map, "visible");
+        // };
 
         map.setFilter("all-storms", ["==", "serial_num", `${feature.properties.serial_num}`]);
         map.setFilter("all-storm-sub-paths", ["==", "serial_num", `${feature.properties.serial_num}`]);
@@ -88,19 +91,19 @@ document.addEventListener("DOMContentLoaded", () => {
         map.addControl(new mapboxgl.NavigationControl());
         map.addSource("all-storms", {
             type: 'geojson',
-            data: "https://anthonymarze.com/assets/all_storms.geojson"
+            data: "https://anthonymarze.com/assets/2000_storms.geojson"
         });
 
-        // map.addSource("all-storm-sub-paths", {
-        //     type: 'geojson',
-        //     data: "https://anthonymarze.com/assets/all_storm_sub_paths.geojson",
-        //     buffer: 0
-        // });
+        map.addSource("all-storm-sub-paths", {
+            type: 'geojson',
+            data: "https://anthonymarze.com/assets/2000_storm_sub_paths.geojson",
+            buffer: 0
+        });
 
-        // map.addSource("all-points", {
-        //     type: 'geojson',
-        //     data: "https://anthonymarze.com/assets/all_storm_data_points.geojson"
-        // });
+        map.addSource("all-points", {
+            type: 'geojson',
+            data: "https://anthonymarze.com/assets/2000_storm_data_points.geojson"
+        });
 
         loadAllStormSubPaths(map, startYear);
 
@@ -281,7 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
         filterAll(map, filter);
     }
 
-    document.querySelectorAll(".update-season").forEach(item => {
+    document.querySelectorAll(".season").forEach(item => {
         item.addEventListener("input", seasonUpdate);
     });
 

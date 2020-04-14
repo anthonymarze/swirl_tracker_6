@@ -14,72 +14,18 @@
     <script type="module" src="./dist/main.js"></script>
     <div class="root">
         <div class="root-box">
-            <div id='map'></div>
-            <div class = "side-inputs">
-                <div class="title-box">
-                    <!-- Swirl Tracker 6 -->
+            <div id='map'>
+                <!-- <div class="title-box">
                     <h1>Swirl Tracker 6</h1>
                     <h3>Worldwide Tropcial Cyclone data</h3>
-                    <h3>(1848-2017)</h3>
-                </div>
-                <div class="intensity-display">
-                    <h3>Max Intensity (based on 
-                        <a href="https://en.wikipedia.org/wiki/Saffir%E2%80%93Simpson_scale" 
-                            target="_" 
-                            id="saffir-link">
-                            Saffir-Simpson scale
-                        </a>)
-                    </h3>
-                    <div class="intensity-inputs">
-                        <button class="update" id ="hi-TD">TD</button>
-                        <button class="update" id ="hi-TS">TS</button>
-                        <button class="update" id ="hi-1">1</button>
-                        <button class="update" id ="hi-2">2</button>
-                        <button class="update" id ="hi-3">3</button>
-                        <button class="update" id ="hi-4">4</button>
-                        <button class="update" id ="hi-5">5</button>
-                    </div>
-                    <p>*TD = Tropcial Depression    *TS = Tropical Storm</p>
-                </div>
-                <!-- <div class="basin-box">
-                    <label class="basin-label">ocean basin(s): </label>
-                    <select multiple class="update-basin basin">
-                        <option value="NA">North Atlantic</option>
-                        <option value="SA">South Atlantic</option>
-                        <option value="NI">North Indian</option>
-                        <option value="SI">South Indian</option>
-                        <option value="WP">West Pacific</option>
-                        <option value="EP">East Pacific</option>
-                        <option value="SP">South Pacific</option>
-                    </select>
+                    <h3>(2000-2017)</h3>
                 </div> -->
-                <div class="name-box">
-                    <label class="name-label">name:</label>
-                    <input class="update-name name"
-                        id="name-input"
-                        type="text">
-                </div>
-                <div class="season-box">
-                    <label class="year-label">year:</label>
-                    <input type="number"
-                        name="points"
-                        min="1848"
-                        max="2019"
-                        step="1"
-                        value="2000"
-                        class="update-season season"
-                        id="start-year">
-                </div>
-                <div class="detail-box">
-                    <button class="update"
-                        id="detailed-paths">detailed-paths</button>
-                    <button class="update" 
-                        id="reset-fields">reset-fields</button>
-                </div>    
-                <div class="title-box" id="detail-box">
+
+                <div class="title-box" id="float-info-box">
+                    <div id="detail-box">
                     <h2 id="sample-name"></h2>
                     <!-- <p id="sample-serial-num"></p> -->
-                    <!-- <p id="sample-season"></p> -->
+                    <p id="sample-season"></p>
                     <p id="sample-num"></p>
                     <!-- <p id="sample-nature"></p> -->
                     <p id="sample-basin"></p>
@@ -88,7 +34,103 @@
                     <p id="sample-min-pressure"></p>
                     <p id="sample-center"></p>
                     <!-- <p id="sample-track-type"></p> -->
+                    </div> 
                 </div>
+
+                <!-- <div class="title-box" id="float-chart-box">
+                    
+                </div> -->
+            </div>
+            <div class="bottom-panel">
+                <div class="timeline-box">
+                    <div class="text-box year-input">
+                        <label class="year-label">year:</label>
+                        <input type="number" 
+                            name="points" 
+                            min="2000" 
+                            max="2017" 
+                            step="1" 
+                            value="2000" 
+                            class="update field season"
+                            id="start-year">
+                    </div>
+                    <div id="timeline">
+
+                    </div>
+                    <div class="text-box year-input">
+                        <label class="year-label">year:</label>
+                        <input type="number" 
+                            name="points" 
+                            min="2000" 
+                            max="2017" 
+                            step="1" 
+                            value="2017" 
+                            class="update field season"
+                            id="end-year">
+                    </div>
+                </div>
+
+                <div class="bottom-inputs-box">
+                    <div class="intensity-display">
+                        <h3>Max Intensity (based on 
+                            <a href="https://en.wikipedia.org/wiki/Saffir%E2%80%93Simpson_scale" 
+                                target="_" 
+                                id="saffir-link">
+                                Saffir-Simpson scale
+                            </a>)
+                        </h3>
+                        <div class="intensity-inputs">
+                            <button class="update button" id ="hi-TD">TD</button>
+                            <button class="update button" id ="hi-TS">TS</button>
+                            <button class="update button" id ="hi-1">1</button>
+                            <button class="update button" id ="hi-2">2</button>
+                            <button class="update button" id ="hi-3">3</button>
+                            <button class="update button" id ="hi-4">4</button>
+                            <button class="update button" id ="hi-5">5</button>
+                        </div>
+                        <p>*TD = Tropcial Depression    *TS = Tropical Storm</p>
+                    </div>
+                    <div class="basin-box">
+                        <label class="basin-label">ocean basin(s): </label>
+                        <div class="basin-list">
+                            <li>
+                                <ul>North Indian</ul>
+                                <ul>South Indian</ul>
+                            </li>
+                            <li>
+                                <ul>West Pacific</ul>
+                                <ul>East Pacific</ul>
+                                <ul>South Pacific</ul>
+                            </li>
+                            <li>
+                                <ul>North Atlantic</ul>
+                                <ul>South Atlantic</ul>
+                            </li>
+                        </div>
+                        <!-- <select multiple class="update field basin">
+                            <option value="NA">North Atlantic</option>
+                            <option value="SA">South Atlantic</option>
+                            <option value="NI">North Indian</option>
+                            <option value="SI">South Indian</option>
+                            <option value="WP">West Pacific</option>
+                            <option value="EP">East Pacific</option>
+                            <option value="SP">South Pacific</option>
+                        </select> -->
+                    </div>
+                    <div class="text-box">
+                        <label class="name-label">name:</label>
+                        <input class="update field name"
+                            id="name-input"
+                            type="text">
+                    </div>
+                    <div class="detail-box">
+                        <button class="update button"
+                            id="detailed-paths">detailed-paths</button>
+                        <button class="update button" 
+                            id="reset-fields">reset-fields</button>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>
