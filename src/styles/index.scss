@@ -57,6 +57,11 @@ button::-moz-focus-inner {
     margin: 3%;
 }
 
+.detail-box > button {
+    margin: 0 10px;
+    padding: 0 10px;
+}
+
 .intensity-display {
     text-align: center;
     height: 100%;
@@ -312,7 +317,7 @@ button::-moz-focus-inner {
 }
 
 #timeline {
-    background-color: rebeccapurple;
+    background-color: blue;
     height: 100%;
     width: 1000px;
 }

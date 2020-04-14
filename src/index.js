@@ -10,6 +10,7 @@ import loadAllStormsHighlighted from './mapFeatures/loadAllStormsHighlighted.js'
 import loadAllStormSubPaths from './mapFeatures/loadAllStormSubPaths.js';
 import loadAllPointsHighlighted from './mapFeatures/loadAllPointsHighlighted.js';
 import toggleAllStormsVisibility from './toggleAllStormsVisibility.js';
+import setSeasonRange from './scripts/setSeasonRange.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     mapboxgl.accessToken = 'pk.eyJ1IjoiYW50aG9ueW1hcnplIiwiYSI6ImNrMjZoOWU0MzBnOHMzbG8wZDN1NzByYnQifQ.Yb4cvywiiVs1hvKcTHCnAA';
@@ -22,9 +23,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // let startYear = parseInt(document.getElementById("start-year").value, 10);
     let startYear = 2000;
+    let endYear = 2017;
+    let seasonRange = setSeasonRange(startYear, endYear);
+
     let filter = ["all", 
         ["in", "intensity", "TD", "TS", "1", "2", "3", "4", "5"], 
-        ["==", "season", startYear]
+        ["in", "season"].concat(seasonRange)
     ];
     
     let selected = "";
@@ -105,13 +109,13 @@ document.addEventListener("DOMContentLoaded", () => {
             data: "https://anthonymarze.com/assets/2000_storm_data_points.geojson"
         });
 
-        loadAllStormSubPaths(map, startYear);
+        loadAllStormSubPaths(map, seasonRange);
 
-        loadAllStorms(map, startYear);
+        loadAllStorms(map, seasonRange);
 
         loadAllStormsHighlighted(map);
 
-        loadAllPoints(map, startYear);
+        loadAllPoints(map, seasonRange);
 
         loadAllPointsHighlighted(map);
     });
@@ -262,13 +266,21 @@ document.addEventListener("DOMContentLoaded", () => {
         item.addEventListener("mouseout", updateHoverOut);
     });
 
-    const seasonUpdate = (e) => {
-        let val = e.target.value;
+// EVENTS //
+
+    const updateSeasonRange = (e) => {
         e.preventDefault();
         e.stopPropagation();
+        if(e.target.id === "start-year") {
+            startYear = parseInt(e.target.value);
+            seasonRange = setSeasonRange(startYear, endYear);
+        } else if(e.target.id === "end-year") {
+            endYear = parseInt(e.target.value);
+            seasonRange = setSeasonRange(startYear, endYear);
+        }
 
         let hasSeason = false;
-        let newFilter = ["in", "season", parseInt(val)];
+        let newFilter = ["in", "season"].concat(seasonRange);
 
         filter.forEach(val => {
             if (val[1] === "season") {
@@ -284,9 +296,9 @@ document.addEventListener("DOMContentLoaded", () => {
         filterAll(map, filter);
     }
 
-    document.querySelectorAll(".season").forEach(item => {
-        item.addEventListener("input", seasonUpdate);
-    });
+    document.getElementById("start-year").addEventListener("input", updateSeasonRange);
+    document.getElementById("end-year").addEventListener("input", updateSeasonRange);
+
 
     const nameUpdate = (e) => {
         let val = e.target.value;
@@ -315,9 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
         filterAll(map, filter);
     }
 
-    document.querySelectorAll(".update-name").forEach(item => {
-        item.addEventListener("input", nameUpdate);
-    });
+    document.getElementById("name").addEventListener("input", nameUpdate);
 
     const basinUpdate = (e) => {
         let val = e.target.value;
