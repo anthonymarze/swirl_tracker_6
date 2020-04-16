@@ -5,9 +5,9 @@
     <title>Swirl Tracker 6</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js'></script>
     <link href="https://fonts.googleapis.com/css?family=Josefin+Slab&display=swap" rel="stylesheet"/>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css' rel='stylesheet' />
     <link rel="stylesheet" type="text/css" href="dist/main.css?<?php echo date('l jS \of F Y h:i:s A'); ?>">
 </head>
 <body>
@@ -21,7 +21,8 @@
                     <h3>(2000-2017)</h3>
                 </div> -->
 
-                <div class="title-box" id="float-info-box">
+                <div id="info-box">
+                    <button id="close-info-box">X</button>
                     <div id="detail-box">
                     <h2 id="sample-name"></h2>
                     <!-- <p id="sample-serial-num"></p> -->
@@ -34,7 +35,7 @@
                     <p id="sample-min-pressure"></p>
                     <p id="sample-center"></p>
                     <!-- <p id="sample-track-type"></p> -->
-                    </div> 
+                    </div>
                 </div>
 
                 <!-- <div class="title-box" id="float-chart-box">
@@ -124,9 +125,9 @@
                             type="text">
                     </div>
                     <div class="detail-box">
-                        <button class="update button"
+                        <button class="button"
                             id="detailed-paths">detailed-paths</button>
-                        <button class="update button" 
+                        <button class="button" 
                             id="reset-fields">reset-fields</button>
                     </div>
                 </div>

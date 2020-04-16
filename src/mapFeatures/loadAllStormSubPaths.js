@@ -1,4 +1,4 @@
-export default function loadAllStormSubPaths(map, seasonRange) {
+export default function loadAllStormSubPaths(map, filter) {
     map.addLayer({
         "id": "all-storm-sub-paths",
         "type": "line",
@@ -10,6 +10,6 @@ export default function loadAllStormSubPaths(map, seasonRange) {
         "layout": {
             "visibility": "none"
         },
-        "filter": ["in", "season"].concat(seasonRange)
+        "filter": filter
     })
 };

@@ -1,4 +1,4 @@
-export default function loadAllStorms(map, seasonRange) {
+export default function loadAllStorms(map, filter) {
     map.addLayer({
     "id": "all-storms",
     "type": "line",
@@ -20,6 +20,6 @@ export default function loadAllStorms(map, seasonRange) {
     "layout": {
         "visibility": "visible"
     },
-    "filter": ["in", "season"].concat(seasonRange)
+    "filter": filter
     })
 };

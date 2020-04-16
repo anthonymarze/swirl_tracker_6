@@ -1,4 +1,4 @@
-export default function loadAllPoints(map, seasonRange) {
+export default function loadAllPoints(map, filter) {
     map.addLayer({
         "id": "all-points",
         "type": "circle",
@@ -19,6 +19,6 @@ export default function loadAllPoints(map, seasonRange) {
         "layout": {
             "visibility": "visible"
         },
-        "filter": ["in", "season"].concat(seasonRange)
+        "filter": filter
     })
 };

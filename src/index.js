@@ -1,16 +1,13 @@
 import './styles/index.scss';
 import mapboxgl from 'mapbox-gl';
-import { intensityCalculator, intensityColor } from './scripts/intensity_calculator.js';
-import { basinNames } from './scripts/basin_names';
-import { getMaxBounds } from './scripts/get_max_bounds';
-import filterAll from './filterAll.js';
-import loadAllPoints from './mapFeatures/loadAllPoints.js';
-import loadAllStorms from './mapFeatures/loadAllStorms.js';
-import loadAllStormsHighlighted from './mapFeatures/loadAllStormsHighlighted.js';
-import loadAllStormSubPaths from './mapFeatures/loadAllStormSubPaths.js';
-import loadAllPointsHighlighted from './mapFeatures/loadAllPointsHighlighted.js';
-import toggleAllStormsVisibility from './toggleAllStormsVisibility.js';
+import { intensityColor } from './scripts/intensity_calculator.js';
+import filterAll from './scripts/filterAll.js';
 import setSeasonRange from './scripts/setSeasonRange.js';
+import showStormInfo from './scripts/showStormInfo.js';
+import loadAllSources from './mapFeatures/loadAllSources';
+import toggleDetailedPaths from './scripts/toggleDetailedPaths';
+import resetFields from './scripts/resetFields';
+import hoverOverFeature from './scripts/hoverOverFeature';
 
 document.addEventListener("DOMContentLoaded", () => {
     mapboxgl.accessToken = 'pk.eyJ1IjoiYW50aG9ueW1hcnplIiwiYSI6ImNrMjZoOWU0MzBnOHMzbG8wZDN1NzByYnQifQ.Yb4cvywiiVs1hvKcTHCnAA';
@@ -21,159 +18,35 @@ document.addEventListener("DOMContentLoaded", () => {
         zoom: 3
     });
 
-    // let startYear = parseInt(document.getElementById("start-year").value, 10);
     let startYear = 2000;
     let endYear = 2017;
     let seasonRange = setSeasonRange(startYear, endYear);
+    const intensityVals = ["TD", "TS", "1", "2", "3", "4", "5"];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const years = [];
+        for(let i = 2000; i < 2018; i++) {
+            years.push(i);
+        }
 
     let filter = ["all", 
-        ["in", "intensity", "TD", "TS", "1", "2", "3", "4", "5"], 
-        ["in", "season"].concat(seasonRange)
+        ["match", ["get", "intensity"], intensityVals, true, false], 
+        ["match", ["get", "season"], seasonRange, true, false]
     ];
-    
-    let selected = "";
-
-    // const intensityVals = ["TD", "TS", "1", "2", "3", "4", "5"];
-    const toggledVals = ["TD", "TS", "1", "2", "3", "4", "5"];
-    const years = [];
-    for(let i = 2000; i < 2018; i++) {
-        years.push(i);
-    }
-
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    // var sel = document.getElementById('selDemo');
-    // var opt = document.createElement('option');
-    // opt.appendChild(document.createTextNode('New Option Text'));
-    // opt.value = 'option value';
-    // sel.appendChild(opt);
 
     const leaveStormHighlight = () => {
         map.getCanvas().style.cursor = '';
         popup.remove();
-        map.setFilter("all-storms-highlighted", ["==", "serial_num", ""]);
+        map.setFilter("all-storms-highlighted", ["==", ["get", "serial_num"], ""]);
     }
 
-    const showStormInfo = e => {
-        map.getCanvas().style.cursor = 'pointer';
+    const handleStormInfo = e => {
+        e.preventDefault();
         let feature = e.features[0];
-
-        selected = feature.properties.serial_num;
-
-        map.fitBounds(getMaxBounds(feature.geometry.coordinates),
-            { padding: { top: 150, bottom: 150, left: 150, right: 150 } });
-
-        // map.setFilter("all-storms", ["==", "serial_num", `${feature.properties.serial_num}`]);
-        // map.setFilter("all-points", ["==", "serial_num", `${feature.properties.serial_num}`]);
-
-        // if (map.getLayoutProperty("all-storms", "visibility") === "visible") {
-        //     toggleAllStormsVisibility(map, "visible");
-        // };
-
-        map.setFilter("all-storms", ["==", "serial_num", `${feature.properties.serial_num}`]);
-        map.setFilter("all-storm-sub-paths", ["==", "serial_num", `${feature.properties.serial_num}`]);
-        map.setFilter("all-points", ["==", "serial_num", `${feature.properties.serial_num}`]);
-
-        // document.getElementById("sample-serial-num").innerHTML = `${feature.properties.serial_num}`;
-        document.getElementById("sample-name").innerHTML = `${feature.properties.name} (${feature.properties.season})`;
-        // document.getElementById("sample-season").innerHTML = `year: ${feature.properties.season}`;
-        document.getElementById("sample-num").innerHTML = `storm #${feature.properties.num} of the season`;
-        // document.getElementById("sample-nature").innerHTML = `nature: ${feature.properties.nature}`;
-        document.getElementById("sample-basin").innerHTML = `basin: ${basinNames(feature.properties.basin)}`;
-        // document.getElementById("sample-sub-basin").innerHTML = `sub-basin: ${feature.properties.sub_basin}`;
-        document.getElementById("sample-max-wind").innerHTML = `maximum windspeed: ${feature.properties.max_windspeed} knots`;
-        document.getElementById("sample-min-pressure").innerHTML = `minimum pressure: ${feature.properties.min_pressure} millibars`;
-        document.getElementById("sample-center").innerHTML = `recording center: ${feature.properties.center.toUpperCase()}`;
-        // document.getElementById("sample-track-type").innerHTML = `track type: ${feature.properties.track_type}`;
+        showStormInfo(map, feature);
     }
 
     const popup = new mapboxgl.Popup({
         closeButton: false
-    });
-
-    map.on('load', () => {
-        
-        map.addControl(new mapboxgl.NavigationControl());
-        map.addSource("all-storms", {
-            type: 'geojson',
-            data: "https://anthonymarze.com/assets/2000_storms.geojson"
-        });
-
-        map.addSource("all-storm-sub-paths", {
-            type: 'geojson',
-            data: "https://anthonymarze.com/assets/2000_storm_sub_paths.geojson",
-            buffer: 0
-        });
-
-        map.addSource("all-points", {
-            type: 'geojson',
-            data: "https://anthonymarze.com/assets/2000_storm_data_points.geojson"
-        });
-
-        loadAllStormSubPaths(map, seasonRange);
-
-        loadAllStorms(map, seasonRange);
-
-        loadAllStormsHighlighted(map);
-
-        loadAllPoints(map, seasonRange);
-
-        loadAllPointsHighlighted(map);
-    });
-
-    map.on("mousemove", "all-points", e => {
-        map.getCanvas().style.cursor = 'pointer';
-        let feature = e.features[0];
-
-        popup.setLngLat(e.lngLat);
-        popup.setHTML(`<h3>${feature.properties.name} (${feature.properties.season})</h3>`);
-        popup.addTo(map);
-
-        map.setFilter("all-points", ["==", "serial_num", `${feature.properties.serial_num}`]);
-        // map.setLayoutProperty("all-points", "visibility", "visible");
-    })
-
-    map.on("mousemove", "all-storms", (e) => {
-        map.getCanvas().style.cursor = 'pointer';
-        let feature = e.features[0];
-
-        popup.setLngLat(e.lngLat);
-        popup.setHTML(`<h3>${feature.properties.name} (${feature.properties.season})</h3>`);
-        popup.addTo(map);
-
-        map.setFilter("all-storms-highlighted", ["==", "serial_num", `${feature.properties.serial_num}`]);
-        // map.setLayoutProperty("all-storms", "visibility", "visible");
-    })
-
-    map.on("mousemove", "all-storm-sub-paths", (e) => {
-        map.getCanvas().style.cursor = 'pointer';
-        let feature = e.features[0];
-
-        popup.setLngLat(e.lngLat);
-        popup.setHTML(`<h3>${feature.properties.name} (${feature.properties.season})</h3>`);
-        popup.addTo(map);
-
-        map.setFilter("all-storms-highlighted", ["==", "serial_num", `${feature.properties.serial_num}`]);
-        // map.setLayoutProperty("all-storms", "visibility", "visible");
-    })
-
-    map.on("click", "all-storms", (e) => {
-        showStormInfo(e);
-    })
-
-    map.on("click", "all-storm-sub-paths", (e) => {
-        showStormInfo(e);
-    })
-
-    map.on("mouseleave", "all-storms", () => {
-        leaveStormHighlight();
-    });
-
-    map.on("mouseleave", "all-storm-sub-paths", () => {
-        leaveStormHighlight();
-    });
-
-    map.on("mouseleave", "all-points", () => {
-        leaveStormHighlight();
     });
 
     const clickedUpdate = (e) => {
@@ -181,46 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
         e.stopPropagation();
         const val = e.target.innerHTML;
 
-        if (val === "detailed-paths") {
-            if(map.getLayoutProperty("all-storms", "visibility") === "visible") {
-                toggleAllStormsVisibility(map, "none");
-                document.getElementById("detailed-paths").style.backgroundColor = "#e6e6e6";
-            } 
-            else if (map.getLayoutProperty("all-storms", "visibility") === "none") {
-                toggleAllStormsVisibility(map, "visible");
-                document.getElementById("detailed-paths").style.backgroundColor = "#fff";
-            }
-        } else if(val === "reset-fields") {
-
-            //not sure what is happending with setTimeout here
-
-            setTimeout(
-                map.flyTo({
-                zoom: 3,
-                center: [-77.38, 39],
-                essential: true
-                })
-            , 5000);
-
-            filter = ["all",
-                ["in", "intensity", "TD", "TS", "1", "2", "3", "4", "5"],
-                ["==", "season", startYear]
-            ];
-            filterAll(map, filter);
-            toggleAllStormsVisibility(map, "visible");
-            document.getElementById("detailed-paths").style.backgroundColor = "#fff";
-            document.getElementById("start-year").value = "2000";
-            document.getElementById("name-input").value = "";
-            let detailBox = document.getElementById("detail-box");
-            let child = detailBox.lastChild;
-            while(child) {
-                detailBox.removeChild(detailBox.firstChild)
-            }
-
-        } else if(!toggledVals.includes(val)) {
-            toggledVals.push(val);
-            let newFilter = ["in", "intensity"];
-            toggledVals.forEach(tVal => {
+        if(!intensityVals.includes(val)) {
+            intensityVals.push(val);
+            let newFilter = ["in", ["get", "intensity"]];
+            intensityVals.forEach(tVal => {
                 newFilter.push(tVal)
             });
 
@@ -233,10 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
             filterAll(map, filter);
             document.getElementById(`hi-${val}`).style.backgroundColor = intensityColor(val);
         } else {
-            let valIdx = toggledVals.indexOf(val);
-            toggledVals.splice(valIdx, 1);
+            let valIdx = intensityVals.indexOf(val);
+            intensityVals.splice(valIdx, 1);
             let newFilter = ["in", "intensity"];
-            toggledVals.forEach(tVal => {
+            intensityVals.forEach(tVal => {
                 newFilter.push(tVal)
             });
 
@@ -268,9 +105,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // EVENTS //
 
+// MAP EVENTS //
+
+    map.on('load', () => {
+        map.addControl(new mapboxgl.NavigationControl());
+        loadAllSources(map, filter);
+    });
+
+    map.on("mousemove", "all-points", (e) => {
+        let feature = e.features[0];
+        popup.setLngLat(e.lngLat);
+        hoverOverFeature(map, popup, feature, "all-points")
+    })
+
+    map.on("mousemove", "all-storms", (e) => {
+        let feature = e.features[0];
+        popup.setLngLat(e.lngLat);
+        hoverOverFeature(map, popup, feature, "all-storms")
+    })
+
+    map.on("mousemove", "all-storm-sub-paths", (e) => {
+        let feature = e.features[0];
+        popup.setLngLat(e.lngLat);
+        hoverOverFeature(map, popup, feature, "all-storm-sub-paths")
+    })
+
+    map.on("click", "all-storms", (e) => {
+        handleStormInfo(e);
+    })
+
+    map.on("click", "all-storm-sub-paths", (e) => {
+        handleStormInfo(e);
+    })
+
+    map.on("mouseleave", "all-storms", () => {
+        leaveStormHighlight();
+    });
+
+    map.on("mouseleave", "all-storm-sub-paths", () => {
+        leaveStormHighlight();
+    });
+
+    map.on("mouseleave", "all-points", () => {
+        leaveStormHighlight();
+    });
+
+// OTHER EVENTS //
+
     const updateSeasonRange = (e) => {
         e.preventDefault();
         e.stopPropagation();
+
         if(e.target.id === "start-year") {
             startYear = parseInt(e.target.value);
             seasonRange = setSeasonRange(startYear, endYear);
@@ -300,21 +185,46 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("end-year").addEventListener("input", updateSeasonRange);
 
 
-    const nameUpdate = (e) => {
-        let val = e.target.value;
+    const updateName = (e) => {
         e.preventDefault();
         e.stopPropagation();
 
+        // map.removeLayer("searched-storms");
+        // map.removeSource("searched-storms");
+
+        let name = e.target.value.toUpperCase();
+
+        // let searchedNames = [];
+
+        // map.querySourceFeatures("all-storms").forEach(feature => {
+        //     if(feature.properties.name.indexOf(name) === 0) {
+        //         debugger
+        //         searchedNames.push(name);
+        //     }
+        // })
+
+        // map.addSource('searched storms', {
+        //     type: 'geojson',
+        //     data: {
+        //         "type": "FeatureCollection",
+        //         "features": [searchedNames]
+        //     }
+        // });
+
+        // loadSearchedStorms(map, seasonRange);
+
+        // map.setLayoutProperty("all-storms", "visibility", "none");
+
         let hasName = false;
-        let newFilter = ["in", "name", val.toUpperCase()];
-        
+        let newFilter = ["match", name.toUpperCase(), ["get", "name_sub_strings"], true, false];
+
         filter.forEach(ele => {
-            if (ele[1] === "name") {
-                if (val === "") {
-                    filter.splice(filter.indexOf(ele), 1);
+            if (ele[2][1] === "name_sub_strings") {
+                if (name === "") {
+                    filter.splice(filter[3], 1);
                     hasName = true;
                 } else {
-                    filter[filter.indexOf(ele)] = newFilter;
+                    filter[3] = newFilter;
                     hasName = true;
                 }
             }
@@ -324,10 +234,33 @@ document.addEventListener("DOMContentLoaded", () => {
             filter.push(newFilter);
         };
 
+        debugger
+
         filterAll(map, filter);
+
+        // let hasName = false;
+        // let newFilter = ["in", "name_sub_paths", name.toUpperCase()];
+        
+        // filter.forEach(ele => {
+        //     if (ele[1] === "name") {
+        //         if (name === "") {
+        //             filter.splice(filter.indexOf(ele), 1);
+        //             hasName = true;
+        //         } else {
+        //             filter[filter.indexOf(ele)] = newFilter;
+        //             hasName = true;
+        //         }
+        //     }
+        // });
+
+        // if (!hasName) {
+        //     filter.push(newFilter);
+        // };
+
+        // filterAll(map, filter);
     }
 
-    document.getElementById("name").addEventListener("input", nameUpdate);
+    document.getElementById("name").addEventListener("input", updateName);
 
     const basinUpdate = (e) => {
         let val = e.target.value;
@@ -364,4 +297,29 @@ document.addEventListener("DOMContentLoaded", () => {
             e.target.style.cursor = "none";
         }
     )
+
+    document.getElementById("close-info-box").addEventListener("click", 
+        (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById("info-box").style.display = "none";
+        }
+    )
+
+    document.getElementById("detailed-paths").addEventListener("click",
+        (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleDetailedPaths(map);
+        }
+    )
+
+    document.getElementById("reset-fields").addEventListener("click",
+        (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            resetFields(map, filter);
+        }
+    )
+
 });

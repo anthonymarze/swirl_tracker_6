@@ -11,6 +11,10 @@ body {
     font-family: 'Josefin Slab', serif;
 }
 
+p {
+    font-size: 16px;
+}
+
 
 button:focus { 
     outline: none; 
@@ -128,24 +132,6 @@ button::-moz-focus-inner {
     height: 30%;
 }
 
-.title-box {
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 1;
-    margin-top: 1%;
-    width: 300px;
-    height: 150px;
-    background-color: #e7e3d9;
-    border: 0px;
-    border-radius: 10px;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: clip;
-    word-wrap: break-word;
-}
-
 .update {
     background-color: #ffffff;
     border: 1px solid #696966;
@@ -182,6 +168,20 @@ button::-moz-focus-inner {
     height: 50px;
 }
 
+#close-info-box {
+    display: block;
+    position: relative;
+    width: 2em;
+    height: 2em;
+    border: 1px solid #b7b7b7;
+    border-radius: 4px;
+}
+
+#close-info-box:hover {
+    cursor: pointer;
+    background-color: #efefef;
+}
+
 #detail-box {
     height: 100%;
     display: flex;
@@ -196,14 +196,23 @@ button::-moz-focus-inner {
     top: 0;
 }
 
-#float-info-box {
+#info-box {
     display: none;
     position: absolute;
     background-color: #e7e3d9;
-    bottom: 20%;
     margin: 2.5%;
-    width: 20%;
+    padding: 3em;
+    width: 400px;
     height: 70%;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    border: 0px;
+    border-radius: 10px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: clip;
+    word-wrap: break-word;
 }
 
 #float-chart-box {
