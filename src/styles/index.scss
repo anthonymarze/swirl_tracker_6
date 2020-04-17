@@ -120,7 +120,7 @@ button::-moz-focus-inner {
 .bottom-panel {
     background-color: #e7e3d9;
     width: 100%;
-    height: 40%;
+    height: 30%;
     overflow: scroll;
 }
 
@@ -129,7 +129,7 @@ button::-moz-focus-inner {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    height: 30%;
+    height: 40%;
 }
 
 .update {
@@ -144,18 +144,32 @@ button::-moz-focus-inner {
 }
 
 .field {
+    text-align: center;
+    background-color: #ffffff;
+    border: 1px solid #696966;
+    outline: none !important;
     width: 100%;
 }
 
-.timeline-box {
+.season-box {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    height: 70%;
+    height: 60%;
+}
+
+#name-box {
+    display: flex;
+    height: 20%;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 10px;
 }
 
 .year-input {
-    width: 80px;
+    width: 10%;
+    padding: 20px 10px;
+    margin: 0;
 }
 
 .year-label {
@@ -170,11 +184,22 @@ button::-moz-focus-inner {
 
 #close-info-box {
     display: block;
-    position: relative;
-    width: 2em;
-    height: 2em;
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 30px;
+    height: 30px;
     border: 1px solid #b7b7b7;
     border-radius: 4px;
+}
+#button-box {
+    display: flex;
+}
+
+#button-box button{
+    padding: 10px;
+    margin: 20px;
+    line-height: 0.95;
 }
 
 #close-info-box:hover {
@@ -183,9 +208,15 @@ button::-moz-focus-inner {
 }
 
 #detail-box {
-    height: 100%;
+    height: 80%;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    padding: 50px 10px;
+}
+
+#detail-box > div {
+    display: flex;
     justify-content: space-between;
 }
 
@@ -199,11 +230,11 @@ button::-moz-focus-inner {
 #info-box {
     display: none;
     position: absolute;
-    background-color: #e7e3d9;
-    margin: 2.5%;
-    padding: 3em;
+    background-color: #eeeeee;
+    margin: 30px;
+    padding: 30px;
     width: 400px;
-    height: 70%;
+    height: 400px;
     left: 0;
     top: 0;
     z-index: 1;
@@ -300,7 +331,7 @@ button::-moz-focus-inner {
 
 #map {
     width: 100%;
-    height: 60%;
+    height: 70%;
 }
 
 #reset-fields {
@@ -325,8 +356,18 @@ button::-moz-focus-inner {
     color: #155196;
 }
 
+#timeline-box {
+    width: 80%;
+    margin: 10px 0;
+}
+
 #timeline {
-    background-color: blue;
-    height: 100%;
-    width: 1000px;
+    background-color: #eeeeee;
+    height: 120px;
+}
+
+#time-increments-box {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
 }

@@ -5,9 +5,9 @@
     <title>Swirl Tracker 6</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js'></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.10.0-beta.1/mapbox-gl.js'></script>
     <link href="https://fonts.googleapis.com/css?family=Josefin+Slab&display=swap" rel="stylesheet"/>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css' rel='stylesheet' />
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.10.0-beta.1/mapbox-gl.css' rel='stylesheet' />
     <link rel="stylesheet" type="text/css" href="dist/main.css?<?php echo date('l jS \of F Y h:i:s A'); ?>">
 </head>
 <body>
@@ -23,18 +23,17 @@
 
                 <div id="info-box">
                     <button id="close-info-box">X</button>
+
+                    <div id="name-box">
+                        <h2 id="sample-name"></h2>
+                        <p id="sample-num"></p>
+                    </div>
+                    
                     <div id="detail-box">
-                    <h2 id="sample-name"></h2>
-                    <!-- <p id="sample-serial-num"></p> -->
-                    <p id="sample-season"></p>
-                    <p id="sample-num"></p>
-                    <!-- <p id="sample-nature"></p> -->
-                    <p id="sample-basin"></p>
-                    <!-- <p id="sample-sub-basin"></p> -->
-                    <p id="sample-max-wind"></p>
-                    <p id="sample-min-pressure"></p>
-                    <p id="sample-center"></p>
-                    <!-- <p id="sample-track-type"></p> -->
+                        <div><p>basin:</p><p id="sample-basin"></p></div>
+                        <div><p>maximum wind:</p><p id="sample-max-wind"></p></div>
+                        <div><p>minimum pressure:</p><p id="sample-min-pressure"></p></div>
+                        <div><p>recording center:</p><p id="sample-center"></p></div>
                     </div>
                 </div>
 
@@ -43,30 +42,27 @@
                 </div> -->
             </div>
             <div class="bottom-panel">
-                <div class="timeline-box">
+                <div class="season-box">
                     <div class="text-box year-input">
-                        <label class="year-label">year:</label>
+                        <label class="year-label">start year:</label>
                         <input type="number" 
-                            name="points" 
-                            min="2000" 
-                            max="2017" 
-                            step="1" 
-                            value="2000" 
-                            class="update field season"
+                            name="points"
+                            step="1"
+                            class="field season"
                             id="start-year">
                     </div>
-                    <div id="timeline">
 
+                    <div id="timeline-box">
+                        <div id="timeline"></div>
+                        <div id="time-increments-box"></div>
                     </div>
+            
                     <div class="text-box year-input">
-                        <label class="year-label">year:</label>
+                        <label class="year-label"> end year:</label>
                         <input type="number" 
-                            name="points" 
-                            min="2000" 
-                            max="2017" 
-                            step="1" 
-                            value="2017" 
-                            class="update field season"
+                            name="points"
+                            step="1"
+                            class="field season"
                             id="end-year">
                     </div>
                 </div>
@@ -108,7 +104,7 @@
                                 <ul>South Atlantic</ul>
                             </li>
                         </div>
-                        <!-- <select multiple class="update field basin">
+                        <!-- <select multiple class="field basin">
                             <option value="NA">North Atlantic</option>
                             <option value="SA">South Atlantic</option>
                             <option value="NI">North Indian</option>
@@ -120,15 +116,15 @@
                     </div>
                     <div class="text-box">
                         <label class="name-label">name:</label>
-                        <input class="update field name"
+                        <input class="field name"
                             id="name"
                             type="text">
                     </div>
-                    <div class="detail-box">
-                        <button class="button"
-                            id="detailed-paths">detailed-paths</button>
-                        <button class="button" 
-                            id="reset-fields">reset-fields</button>
+                    <div id="button-box">
+                        <button class="field button"
+                            id="detailed-paths">detailed paths</button>
+                        <button class="field button" 
+                            id="reset-fields">reset fields</button>
                     </div>
                 </div>
                 

@@ -1,3 +1,5 @@
+import toggleAllStormsVisibility from './toggleAllStormsVisibility.js';
+
 export default function toggleDetailedPaths(map) {
     if (map.getLayoutProperty("all-storms", "visibility") === "visible") {
         toggleAllStormsVisibility(map, "none");

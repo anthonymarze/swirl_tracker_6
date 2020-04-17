@@ -12,10 +12,11 @@ export default function showStormInfo(map, feature) {
 
     document.getElementById("sample-name").innerHTML = `${feature.properties.name} (${feature.properties.season})`;
     document.getElementById("sample-num").innerHTML = `storm #${feature.properties.num} of the season`;
-    document.getElementById("sample-basin").innerHTML = `basin: ${basinNames(feature.properties.basin)}`;
-    document.getElementById("sample-max-wind").innerHTML = `maximum windspeed: ${feature.properties.max_windspeed} knots`;
-    document.getElementById("sample-min-pressure").innerHTML = `minimum pressure: ${feature.properties.min_pressure} millibars`;
-    document.getElementById("sample-center").innerHTML = `recording center: ${feature.properties.center.toUpperCase()}`;
+    document.getElementById("sample-basin").innerHTML = `${basinNames(feature.properties.basin)}`;
+    document.getElementById("sample-max-wind").innerHTML = `${feature.properties.max_windspeed} knots`;
+    document.getElementById("sample-min-pressure").innerHTML = `${feature.properties.min_pressure} millibars`;
+    document.getElementById("sample-center").innerHTML = `${feature.properties.center.toUpperCase()}`;
 
     document.getElementById("info-box").style.display = "block";
+    document.getElementById("name").value = `${feature.properties.name}`;
 }

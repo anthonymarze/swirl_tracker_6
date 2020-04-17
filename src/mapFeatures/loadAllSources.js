@@ -7,7 +7,7 @@ import loadAllPointsHighlighted from './loadAllPointsHighlighted.js';
 export default function loadAllSources(map, defaultFilter) {
     map.addSource("all-storms", {
         type: 'geojson',
-        data: "https://anthonymarze.com/assets/2000_storms.geojson"
+        data: "https://anthonymarze.com/assets/2000_storm_paths.geojson"
     });
 
     map.addSource("all-storm-sub-paths", {
