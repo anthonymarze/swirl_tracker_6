@@ -9,10 +9,11 @@ export default function resetFields(map, mapCenter, zoomLevel){
     let endYear = 2010;
     let seasonRange = setSeasonRange(startYear, endYear);
     let stormName = "";
+    let basinList = ["NI", "SI", "WP", "EP", "SP", "NA", "SA"];
 
     // SETS DEFAULT FILTER //
 
-    const defaultFilter = createDefaultFilter(intensityVals, seasonRange, stormName);
+    const defaultFilter = createDefaultFilter(intensityVals, seasonRange, stormName, basinList);
 
     // NOT SURE WHAT IS HAPPENING WITH SET TIMEOUT HERE //
 
@@ -41,5 +42,5 @@ export default function resetFields(map, mapCenter, zoomLevel){
 
     // RETURNS VALUES TO ORIGINAL SETTINGS
 
-    return ([intensityVals, startYear, endYear, seasonRange, stormName, defaultFilter]);
+    return ([intensityVals, startYear, endYear, seasonRange, stormName, basinList, defaultFilter]);
 }

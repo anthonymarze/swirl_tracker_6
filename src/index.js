@@ -13,6 +13,8 @@ import updateFilterName from './scripts/updateFilterName';
 import updateFilterIntensity from './scripts/updateFilterIntensity';
 import toggleAllStormsVisibility from './scripts/toggleAllStormsVisibility';
 import updateFilterSeason from './scripts/updateFilterSeason';
+import updateFilterBasin from './scripts/updateFilterBasin';
+import updateBasinList from './scripts/updateBasinList';
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -35,8 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // INITIAL CONFIGURATION OF SETTINGS //
 
-    let intensityVals, startYear, endYear, seasonRange, stormName, filter;
-    [intensityVals, startYear, endYear, seasonRange, stormName, filter] = resetFields(map, mapCenter, zoomLevel);
+    let intensityVals, startYear, endYear, seasonRange, stormName, basinList, filter;
+    [intensityVals, startYear, endYear, seasonRange, stormName, basinList, filter] = resetFields(map, mapCenter, zoomLevel);
 
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     defineTimeIncrements(months);
@@ -160,13 +162,19 @@ document.addEventListener("DOMContentLoaded", () => {
         e.target.style.backgroundColor = style;
     }
 
-    const basinUpdate = (e) => {
-        let val = e.target.value;
+    const handleBasin = (e) => {
         e.preventDefault();
         e.stopPropagation();
+        let basin = e.target;
+        basinList = updateBasinList(basin, basinList);
 
-        let filter = ["in", "basin", val];
+        filter = updateFilterBasin(filter, basinList);
         filterAll(map, filter);
+
+        // CANNOT SEEM TO REDRAW AFTER FILTER CHANGE - DIRTY TRICK TO FORCE REDRAW //
+
+        toggleAllStormsVisibility(map, "none");
+        toggleAllStormsVisibility(map, "visible");
     }
 
 
@@ -175,8 +183,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("name").addEventListener("input", updateName);
 
-    document.querySelectorAll(".update-basin").forEach(item => {
-        item.addEventListener("change", basinUpdate);
+    document.querySelectorAll(".basin").forEach(item => {
+        item.addEventListener("click", handleBasin);
     });
 
     document.getElementById("detailed-paths").addEventListener("mouseover", 
@@ -193,9 +201,9 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             e.stopPropagation();
             if (map.getLayoutProperty("all-storms", "visibility") === "none") {
-                e.target.style.background = "#e6e6e6";
+                e.target.style.border = "2px solid red";
             } else {
-                e.target.style.background = "#fff";
+                e.target.style.border = "1px solid #696969";
             }
             
             e.target.style.cursor = "none";
@@ -222,7 +230,8 @@ document.addEventListener("DOMContentLoaded", () => {
         (e) => {
             e.preventDefault();
             e.stopPropagation();
-            [intensityVals, startYear, endYear, seasonRange, stormName, filter] = resetFields(map, mapCenter, zoomLevel);
+            [intensityVals, startYear, endYear, seasonRange, stormName, basinList, filter] = resetFields(map, mapCenter, zoomLevel);
+            
             filterAll(map, filter);
             toggleAllStormsVisibility(map, "visible");
 

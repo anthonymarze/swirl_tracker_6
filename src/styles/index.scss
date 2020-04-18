@@ -15,6 +15,10 @@ p {
     font-size: 16px;
 }
 
+label {
+    font-size: 1.5em;
+    font-weight: 600;
+}
 
 button:focus { 
     outline: none; 
@@ -22,14 +26,6 @@ button:focus {
 
 button::-moz-focus-inner {
   border: 0;
-}
-
-.basin {
-    text-align: center;
-    height: 50px;
-    font-size: 1.4em;
-    font-weight: 500;
-    font-family: 'Josefin Slab', serif;
 }
 
 .basin-box {
@@ -49,8 +45,26 @@ button::-moz-focus-inner {
 }
 
 .basin-list li {
+    list-style-type: none;
+    
+}
+
+.basin {
+    padding: 3px;
     display: block;
-    text-decoration: none;
+    font-size: 18px;
+    border: 1px solid red;
+    border-radius: 3px;
+}
+
+.basin:hover {
+    font-weight: 400;
+    cursor: pointer;
+    color: red;
+}
+
+.name:focus {
+    background-color: #eeeeee;
 }
 
 .detail-box {
@@ -92,11 +106,6 @@ button::-moz-focus-inner {
     height: fit-content;
     margin: 3%;
     min-height: 90px;
-}
-
-.name-label {
-    font-size: 1.5em;
-    font-weight: 600;
 }
 
 .root {
@@ -170,11 +179,6 @@ button::-moz-focus-inner {
     width: 10%;
     padding: 20px 10px;
     margin: 0;
-}
-
-.year-label {
-    font-size: 1.5em;
-    font-weight: 600;
 }
 
 #all-data-points {
