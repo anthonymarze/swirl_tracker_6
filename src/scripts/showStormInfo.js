@@ -1,5 +1,7 @@
 import { getMaxBounds } from './get_max_bounds';
 import { basinNames } from './basin_names';
+import { intensityCalculator } from './intensity_calculator';
+
 export default function showStormInfo(map, feature) {
     map.getCanvas().style.cursor = 'pointer';
 
@@ -18,5 +20,56 @@ export default function showStormInfo(map, feature) {
     document.getElementById("sample-center").innerHTML = `${feature.properties.center.toUpperCase()}`;
 
     document.getElementById("info-box").style.display = "block";
+    document.getElementById("start-year").style.border = "2px solid red";
+    document.getElementById("start-year").value = `${feature.properties.season}`;
+
+    document.getElementById("end-year").style.border = "2px solid red";
+    document.getElementById("end-year").value = `${feature.properties.season}`;
+
+    document.getElementById("name").style.border = "2px solid red";
     document.getElementById("name").value = `${feature.properties.name}`;
+
+    // BASIN INPUT STYLING //
+
+    document.querySelectorAll(".basin").forEach(basin => {
+        const abbreviation = basin.innerHTML[0] + basin.innerHTML[basin.innerHTML.indexOf(" ") + 1]
+        if (abbreviation !== feature.properties.basin) {
+            basin.style.border = "none";
+        }
+    })
+
+    // INTESINTY INPUT STYLING //
+
+    document.querySelectorAll(".intensity").forEach(intensity => {
+        intensity.style.backgroundColor = "#ffffff";
+    })
+
+    const intensityVal = intensityCalculator(feature.properties.max_windspeed, "value");
+    const intensityColor = intensityCalculator(feature.properties.max_windspeed, "color");
+
+    document.getElementById(`hi-${intensityVal}`).style.backgroundColor = intensityColor;
+
+    // DEACTIVATES BOTTOM PANEL //
+
+    document.querySelectorAll(".bottom-panel input").forEach(input => {
+        input.style.opacity = "0.5";
+        input.style.pointerEvents = "none";
+    })
+
+    document.querySelectorAll(".bottom-panel button").forEach(input => {
+        input.style.opacity = "0.5";
+        input.style.pointerEvents = "none";
+    })
+
+    document.querySelectorAll(".bottom-panel ul").forEach(input => {
+        input.style.opacity = "0.5";
+        input.style.pointerEvents = "none";
+    })
+
+    // KEEPS TWO BUTTONS ACTIVE //
+
+    document.getElementById("detailed-paths").style.opacity = "1";
+    document.getElementById("detailed-paths").style.pointerEvents = "auto";
+    document.getElementById("reset-fields").style.opacity = "1";
+    document.getElementById("reset-fields").style.pointerEvents = "auto";
 }

@@ -131,6 +131,11 @@ document.addEventListener("DOMContentLoaded", () => {
             seasonRange = setSeasonRange(startYear, endYear);
         }
 
+        e.target.style.border = "2px solid red";
+        setTimeout(() => {
+            e.target.style.border = "1px solid #696969";
+        }, 1000);
+
         filter = updateFilterSeason(filter, seasonRange);
         filterAll(map, filter);
 
@@ -200,12 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
         (e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (map.getLayoutProperty("all-storms", "visibility") === "none") {
-                e.target.style.border = "2px solid red";
-            } else {
-                e.target.style.border = "1px solid #696969";
-            }
-            
+            e.target.style.background = "#ffffff";
             e.target.style.cursor = "none";
         }
     )
@@ -215,6 +215,10 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             e.stopPropagation();
             document.getElementById("info-box").style.display = "none";
+            [intensityVals, startYear, endYear, seasonRange, stormName, basinList, filter] = resetFields(map, mapCenter, zoomLevel);
+
+            filterAll(map, filter);
+            toggleAllStormsVisibility(map, "visible");
         }
     )
 
@@ -233,12 +237,11 @@ document.addEventListener("DOMContentLoaded", () => {
             [intensityVals, startYear, endYear, seasonRange, stormName, basinList, filter] = resetFields(map, mapCenter, zoomLevel);
             
             filterAll(map, filter);
-            toggleAllStormsVisibility(map, "visible");
 
             // CANNOT SEEM TO REDRAW AFTER FILTER CHANGE - DIRTY TRICK TO FORCE REDRAW //
 
-            // toggleAllStormsVisibility(map, "none");
-            // toggleAllStormsVisibility(map, "visible");
+            toggleAllStormsVisibility(map, "none");
+            toggleAllStormsVisibility(map, "visible");
         }
     )
 
