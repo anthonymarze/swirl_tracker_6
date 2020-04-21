@@ -16,10 +16,10 @@ export default function loadAllSources(map, defaultFilter) {
         buffer: 0
     });
 
-    map.addSource("all-points", {
-        type: 'geojson',
-        data: "https://anthonymarze.com/assets/2000_storm_data_points.geojson"
-    });
+    // map.addSource("all-points", {
+    //     type: 'vector',
+    //     data: "mapbox://anthonymarze.849mm1vv"
+    // });
 
     loadAllStormSubPaths(map, defaultFilter);
 
@@ -27,8 +27,8 @@ export default function loadAllSources(map, defaultFilter) {
 
     loadAllStormsHighlighted(map);
 
-    loadAllPoints(map, defaultFilter);
+    // loadAllPoints(map, defaultFilter);
 
-    loadAllPointsHighlighted(map);
+    // loadAllPointsHighlighted(map);
 }
 

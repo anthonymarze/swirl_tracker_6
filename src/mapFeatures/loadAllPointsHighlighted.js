@@ -6,7 +6,7 @@ export default function loadAllPointsHighlighted(map) {
         "paint": {
             "circle-color": [
                 'step',
-                ["get", "wind"],
+                ["to-number", ["get", "windspeed"]],
                 "#5ebaff",
                 34, "#00faf4",
                 64, "#ffffcc",

@@ -52,11 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
         loadAllSources(map, filter);
     });
 
-    map.on("mousemove", "all-points", (e) => {
-        let feature = e.features[0];
-        popup.setLngLat(e.lngLat);
-        hoverOverFeature(map, popup, feature, "all-points")
-    })
+    // map.on("mousemove", "all-points", (e) => {
+    //     let feature = e.features[0];
+    //     popup.setLngLat(e.lngLat);
+    //     hoverOverFeature(map, popup, feature, "all-points")
+    // })
 
     map.on("mousemove", "all-storms", (e) => {
         let feature = e.features[0];
@@ -64,31 +64,31 @@ document.addEventListener("DOMContentLoaded", () => {
         hoverOverFeature(map, popup, feature, "all-storms")
     })
 
-    map.on("mousemove", "all-storm-sub-paths", (e) => {
-        let feature = e.features[0];
-        popup.setLngLat(e.lngLat);
-        hoverOverFeature(map, popup, feature, "all-storm-sub-paths")
-    })
+    // map.on("mousemove", "all-storm-sub-paths", (e) => {
+    //     let feature = e.features[0];
+    //     popup.setLngLat(e.lngLat);
+    //     hoverOverFeature(map, popup, feature, "all-storm-sub-paths")
+    // })
 
     map.on("click", "all-storms", (e) => {
         handleStormInfo(e);
     })
 
-    map.on("click", "all-storm-sub-paths", (e) => {
-        handleStormInfo(e);
-    })
+    // map.on("click", "all-storm-sub-paths", (e) => {
+    //     handleStormInfo(e);
+    // })
 
     map.on("mouseleave", "all-storms", () => {
         leaveStormHighlight();
     });
 
-    map.on("mouseleave", "all-storm-sub-paths", () => {
-        leaveStormHighlight();
-    });
+    // map.on("mouseleave", "all-storm-sub-paths", () => {
+    //     leaveStormHighlight();
+    // });
 
-    map.on("mouseleave", "all-points", () => {
-        leaveStormHighlight();
-    });
+    // map.on("mouseleave", "all-points", () => {
+    //     leaveStormHighlight();
+    // });
 
 // EVENT HANDLERS //
 
@@ -227,6 +227,12 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             e.stopPropagation();
             toggleDetailedPaths(map);
+            // map.setPaintProperty("all-points", "circle-color", "red")
+
+            // CANNOT SEEM TO REDRAW AFTER FILTER CHANGE - DIRTY TRICK TO FORCE REDRAW //
+
+            // toggleAllStormsVisibility(map, "visible");
+            // toggleAllStormsVisibility(map, "none");
         }
     )
 

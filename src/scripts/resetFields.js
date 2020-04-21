@@ -5,9 +5,9 @@ import createDefaultFilter from './createDefaultFilter.js';
 export default function resetFields(map, mapCenter, zoomLevel){
 
     let intensityVals = ["TD", "TS", "1", "2", "3", "4", "5"];
-    let startYear = 2005;
-    let endYear = 2010;
-    let seasonRange = setSeasonRange(startYear, endYear);
+    let startYear = 2000;
+    let endYear = 2017;
+    let seasonRange = setSeasonRange(2000, 2005);
     let stormName = "";
     let basinList = ["NI", "SI", "WP", "EP", "SP", "NA", "SA"];
 

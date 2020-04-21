@@ -3,9 +3,14 @@ export default function loadAllPoints(map, filter) {
         "id": "all-points",
         "type": "circle",
         "source": "all-points",
+        "source-layer": "mapbox_storm_data-17ruvm",
         "paint": {
+            // "circle-radius": {
+            //     "base": 1.75,
+            //     "stops": [[12, 2], [22, 180]]
+            // },
             "circle-color": [
-                'step',
+                "step",
                 ["get", "wind"],
                 "#5ebaff",
                 34, "#00faf4",
@@ -17,8 +22,9 @@ export default function loadAllPoints(map, filter) {
             ]
         },
         "layout": {
-            "visibility": "visible"
+            "visibility": "none"
         },
         "filter": filter
     })
 };
+

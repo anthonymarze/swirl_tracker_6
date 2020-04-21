@@ -6,7 +6,7 @@ export default function showStormInfo(map, feature) {
     map.getCanvas().style.cursor = 'pointer';
 
     map.fitBounds(getMaxBounds(feature.geometry.coordinates),
-        { padding: { top: 150, bottom: 150, left: 150, right: 150 } });
+        { padding: { top: 150, bottom: 150, left: 550, right: 150 } });
 
     map.setFilter("all-storms", ["==", ["get", "serial_num"], `${feature.properties.serial_num}`]);
     map.setFilter("all-storm-sub-paths", ["==", ["get", "serial_num"], `${feature.properties.serial_num}`]);
