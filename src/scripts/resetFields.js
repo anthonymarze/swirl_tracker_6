@@ -10,10 +10,11 @@ export default function resetFields(map, mapCenter, zoomLevel){
     let seasonRange = setSeasonRange(2000, 2005);
     let stormName = "";
     let basinList = ["NI", "SI", "WP", "EP", "SP", "NA", "SA"];
+    let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     // SETS DEFAULT FILTER //
 
-    const defaultFilter = createDefaultFilter(intensityVals, seasonRange, stormName, basinList);
+    const defaultFilter = createDefaultFilter(intensityVals, seasonRange, stormName, basinList, months);
 
     // NOT SURE WHAT IS HAPPENING WITH SET TIMEOUT HERE //
 
@@ -44,7 +45,13 @@ export default function resetFields(map, mapCenter, zoomLevel){
     })
 
     document.querySelectorAll(".basin").forEach(basin => {
-        basin.style.border = "1px solid red";
+        basin.style.color = "red";
+        basin.style.fontWeight = "bold";
+    })
+
+    document.querySelectorAll(".month").forEach(month => {
+        month.style.color = "red";
+        month.style.fontWeight = "bold";
     })
 
     // ANIMATES RESET FIELDS BUTTON //
@@ -87,5 +94,5 @@ export default function resetFields(map, mapCenter, zoomLevel){
 
     // RETURNS VALUES TO ORIGINAL SETTINGS
 
-    return ([intensityVals, startYear, endYear, seasonRange, stormName, basinList, defaultFilter]);
+    return ([intensityVals, startYear, endYear, seasonRange, stormName, basinList, months, defaultFilter]);
 }

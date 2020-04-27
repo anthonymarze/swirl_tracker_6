@@ -7,6 +7,6 @@ export default function toggleAllStormsVisibility(map, visibility) {
     }
 
     map.setLayoutProperty("all-storm-sub-paths", "visibility", opposite);
-    map.setLayoutProperty("all-points", "visibility", opposite)
+    // map.setLayoutProperty("all-points", "visibility", opposite)
     map.setLayoutProperty("all-storms", "visibility", visibility);
 }

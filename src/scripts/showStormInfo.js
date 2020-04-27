@@ -34,7 +34,13 @@ export default function showStormInfo(map, feature) {
     document.querySelectorAll(".basin").forEach(basin => {
         const abbreviation = basin.innerHTML[0] + basin.innerHTML[basin.innerHTML.indexOf(" ") + 1]
         if (abbreviation !== feature.properties.basin) {
-            basin.style.border = "none";
+            basin.style.color = "black";
+        }
+    })
+
+    document.querySelectorAll(".month").forEach(month => {
+        if (month.innerHTML !== feature.properties.month) {
+            month.style.color = "black";
         }
     })
 

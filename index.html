@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.10.0-beta.1/mapbox-gl.js'></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/d3-require@1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@observablehq/stdlib"></script>
     <link href="https://fonts.googleapis.com/css?family=Josefin+Slab&display=swap" rel="stylesheet"/>
     <link href='https://api.mapbox.com/mapbox-gl-js/v1.10.0-beta.1/mapbox-gl.css' rel='stylesheet' />
     <link rel="stylesheet" type="text/css" href="dist/main.css?<?php echo date('l jS \of F Y h:i:s A'); ?>">
@@ -55,7 +57,20 @@
 
                     <div id="timeline-box">
                         <div id="timeline"></div>
-                        <div id="time-increments-box"></div>
+                        <div id="time-increments-box">
+                            <p class="month noselect">January</p>
+                            <p class="month noselect">February</p>
+                            <p class="month noselect">March</p>
+                            <p class="month noselect">April</p>
+                            <p class="month noselect">May</p>
+                            <p class="month noselect">June</p>
+                            <p class="month noselect">July</p>
+                            <p class="month noselect">August</p>
+                            <p class="month noselect">September</p>
+                            <p class="month noselect">October</p>
+                            <p class="month noselect">November</p>
+                            <p class="month noselect">December</p>
+                        </div>
                     </div>
             
                     <div class="text-box year-input">
@@ -92,17 +107,17 @@
                         <label class="basin-label">ocean basin(s): </label>
                         <div class="basin-list">
                             <li>
-                                <ul class="basin">North Indian</ul>
-                                <ul class="basin">South Indian</ul>
+                                <ul class="basin noselect">North Indian</ul>
+                                <ul class="basin noselect">South Indian</ul>
                             </li>
                             <li>
-                                <ul class="basin">West Pacific</ul>
-                                <ul class="basin">East Pacific</ul>
-                                <ul class="basin">South Pacific</ul>
+                                <ul class="basin noselect">West Pacific</ul>
+                                <ul class="basin noselect">East Pacific</ul>
+                                <ul class="basin noselect">South Pacific</ul>
                             </li>
                             <li>
-                                <ul class="basin">North Atlantic</ul>
-                                <ul class="basin">South Atlantic</ul>
+                                <ul class="basin noselect">North Atlantic</ul>
+                                <ul class="basin noselect">South Atlantic</ul>
                             </li>
                         </div>
                         <!-- <select multiple class="field basin">

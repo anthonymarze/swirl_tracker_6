@@ -5,8 +5,6 @@ export default function updateBasinList(basin, basinList) {
     let basinName = basin.innerHTML;
     basinName = basinName[0] + basinName[basinName.indexOf(" ") + 1];
 
-    debugger
-
     // REMOVES EMPTY STRING AT START OF NEW CYCLE //
 
     if (basinList.includes("")) {
@@ -15,12 +13,12 @@ export default function updateBasinList(basin, basinList) {
 
     if (!basinList.includes(basinName)) {
         basinList.push(basinName);
-        basin.style.border = "1px solid red";
+        basin.style.color = "red";
 
     } else {
         let basinIdx = basinList.indexOf(basinName);
         basinList.splice(basinIdx, 1);
-        basin.style.border = "none";
+        basin.style.color = "black";
 
         // LEAVE EMPTY STRING IF EMPTY //
 

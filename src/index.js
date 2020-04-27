@@ -1,4 +1,8 @@
 import './styles/index.scss';
+// import * as d3 from "d3";
+// import {$, jQuery} from 'jquery';
+import { ResizeSensor } from 'css-element-queries';
+import stackedToGrouped from './scripts/stackedToGrouped';
 import mapboxgl from 'mapbox-gl';
 import filterAll from './scripts/filterAll.js';
 import setSeasonRange from './scripts/setSeasonRange.js';
@@ -7,14 +11,15 @@ import loadAllSources from './mapFeatures/loadAllSources';
 import toggleDetailedPaths from './scripts/toggleDetailedPaths';
 import resetFields from './scripts/resetFields';
 import hoverOverFeature from './scripts/hoverOverFeature';
-import defineTimeIncrements from './scripts/defineTimeIncrements';
 import updateIntensityVals from './scripts/updateIntensityVals';
-import updateFilterName from './scripts/updateFilterName';
-import updateFilterIntensity from './scripts/updateFilterIntensity';
+import updateFilterName from './filterFunctions/updateFilterName';
+import updateFilterIntensity from './filterFunctions/updateFilterIntensity';
 import toggleAllStormsVisibility from './scripts/toggleAllStormsVisibility';
-import updateFilterSeason from './scripts/updateFilterSeason';
-import updateFilterBasin from './scripts/updateFilterBasin';
+import updateFilterSeason from './filterFunctions/updateFilterSeason';
+import updateFilterBasin from './filterFunctions/updateFilterBasin';
+import updateFilterMonth from './filterFunctions/updateFilterMonth';
 import updateBasinList from './scripts/updateBasinList';
+import updateMonths from './scripts/updateMonths';
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -37,11 +42,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // INITIAL CONFIGURATION OF SETTINGS //
 
-    let intensityVals, startYear, endYear, seasonRange, stormName, basinList, filter;
-    [intensityVals, startYear, endYear, seasonRange, stormName, basinList, filter] = resetFields(map, mapCenter, zoomLevel);
+    let intensityVals, startYear, endYear, seasonRange, stormName, basinList, months, filter;
+    [intensityVals, startYear, endYear, seasonRange, stormName, basinList, months, filter] = resetFields(map, mapCenter, zoomLevel);
 
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    defineTimeIncrements(months);
+    // Loads Chart //
+
+    // stackedToGrouped();
 
 // EVENTS //
 
@@ -111,6 +117,93 @@ document.addEventListener("DOMContentLoaded", () => {
         intensityVals = updateIntensityVals(intensity, intensityVals);
 
         filter = updateFilterIntensity(filter, intensityVals);
+
+        // ADD INFORMATION //
+
+        const selectedFeautres = map.querySourceFeatures("all-storms", filter);
+        let sortedTuples = [];
+        selectedFeautres.forEach(feature => {
+            let histoMonth;
+
+            switch (feature.properties.histoMonth) {
+                case "January":
+                    histoMonth = 1;
+                case "February":
+                    histoMonth = 2;
+                case "March":
+                    histoMonth = 3;
+                case "April":
+                    histoMonth = 4;
+                case "May":
+                    histoMonth = 5;
+                case "June":
+                    histoMonth = 6;
+                case "July":
+                    histoMonth = 7;
+                case "August":
+                    histoMonth = 8;
+                case "September":
+                    histoMonth = 9;
+                case "October":
+                    histoMonth = 10;
+                case "November":
+                    histoMonth = 11;
+                case "December":
+                    histoMonth = 12;
+                default:
+                    histoMonth = 13;
+            }
+
+            sortedTuples.push([histoMonth, feature.properties.intensity]);
+        })
+
+        //
+
+        let sortedHistogramByMonth = [];
+        let monthlyDistribution = [0, 0, 0, 0, 0, 0, 0];
+        let prevMonth = 1;
+        let histoIntensity;
+
+        sortedTuples.forEach(tuple => {
+            if(prevMonth !== tuple[0]) {
+                sortedHistogramByMonth.push(monthlyDistribution);
+                monthlyDistribution = [0, 0, 0, 0, 0, 0, 0];
+                prevMonth = tuple[0];
+                // if(tuple[0] > 12) {
+                //     break;
+                // }
+            }
+
+            switch (tuple[1]) {
+                case "TD":
+                    histoIntensity = 0;
+                case "TS":
+                    histoIntensity = 1;
+                case "1":
+                    histoIntensity = 2;
+                case "2":
+                    histoIntensity = 3;
+                case "3":
+                    histoIntensity = 4;
+                case "4":
+                    histoIntensity = 5;
+                case "5":
+                    histoIntensity = 6;
+                default:
+                    histoIntensity = 7;
+            }
+
+            // if(histoIntensity === 7) {
+            //     continue;
+            // }
+
+            monthlyDistribution[histoIntensity]++;
+        })
+
+        debugger
+
+        stackedToGrouped(sortedHistogramByMonth);
+        
         filterAll(map, filter);
 
         // CANNOT SEEM TO REDRAW AFTER FILTER CHANGE - DIRTY TRICK TO FORCE REDRAW //
@@ -182,7 +275,29 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleAllStormsVisibility(map, "visible");
     }
 
+    const handleMonth = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        let month = e.target;
+        months = updateMonths(month, months);
 
+        filter = updateFilterMonth(filter, months);
+        filterAll(map, filter);
+
+        // CANNOT SEEM TO REDRAW AFTER FILTER CHANGE - DIRTY TRICK TO FORCE REDRAW //
+
+        toggleAllStormsVisibility(map, "none");
+        toggleAllStormsVisibility(map, "visible");
+    }
+
+
+// HISTOGRAM EVENT LISTENER //
+    let timeline = document.getElementById("timeline");
+
+    new ResizeSensor(timeline, function () {
+        document.getElementById("months-histogram").remove();
+        stackedToGrouped();
+    });
 
 // EVENT LISTENERS //
 
@@ -190,6 +305,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelectorAll(".basin").forEach(item => {
         item.addEventListener("click", handleBasin);
+    });
+
+    document.querySelectorAll(".month").forEach(item => {
+        item.addEventListener("click", handleMonth);
     });
 
     document.getElementById("detailed-paths").addEventListener("mouseover", 
@@ -215,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             e.stopPropagation();
             document.getElementById("info-box").style.display = "none";
-            [intensityVals, startYear, endYear, seasonRange, stormName, basinList, filter] = resetFields(map, mapCenter, zoomLevel);
+            [intensityVals, startYear, endYear, seasonRange, stormName, basinList, months, filter] = resetFields(map, mapCenter, zoomLevel);
 
             filterAll(map, filter);
             toggleAllStormsVisibility(map, "visible");
@@ -240,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
         (e) => {
             e.preventDefault();
             e.stopPropagation();
-            [intensityVals, startYear, endYear, seasonRange, stormName, basinList, filter] = resetFields(map, mapCenter, zoomLevel);
+            [intensityVals, startYear, endYear, seasonRange, stormName, basinList, months, filter] = resetFields(map, mapCenter, zoomLevel);
             
             filterAll(map, filter);
 

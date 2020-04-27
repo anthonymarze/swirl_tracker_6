@@ -21,6 +21,16 @@ label {
     font-weight: 600;
 }
 
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
 button:focus { 
     outline: none; 
 }
@@ -54,14 +64,14 @@ button::-moz-focus-inner {
     padding: 3px;
     display: block;
     font-size: 18px;
-    border: 1px solid red;
-    border-radius: 3px;
 }
 
 .basin:hover {
-    font-weight: 400;
     cursor: pointer;
-    color: red;
+}
+
+.month:hover {
+    cursor: pointer;
 }
 
 .name:focus {
@@ -366,7 +376,6 @@ button::-moz-focus-inner {
 #timeline-box {
     width: 80%;
     margin: 10px 0;
-    opacity: 0.5;
 }
 
 #timeline {
