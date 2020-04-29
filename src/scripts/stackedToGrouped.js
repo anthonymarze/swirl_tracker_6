@@ -10,6 +10,11 @@ export default function stackedToGrouped(monthlyData) {
     // for(let i = 0; i < 12; i++) {
     //     monthlyData = monthlyData.concat([1, 2, 3, 4, 5, 6, 7]);
     // }
+    const timeline = document.getElementById("timeline");
+    for(let i = 0; i < timeline.childElementCount; i++) {
+        timeline.removeChild(timeline.firstElementChild);
+    }
+
     const intensities = ["TD", "TS", "1", "2", "3", "4", "5"];
 
     const height = 120;
@@ -31,10 +36,10 @@ export default function stackedToGrouped(monthlyData) {
                 .enter()
                 .append("rect")
                 .attr("y", function (d) {
-                    return height - (d * 10);
+                    return height - (d);
                 })
                 .attr("height", function (d) {
-                    return d * 10;
+                    return d;
                 })
                 .attr("width", barWidth)
                 .attr("transform", function (d, i) {

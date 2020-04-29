@@ -1,6 +1,7 @@
 import { getMaxBounds } from './get_max_bounds';
 import { basinNames } from './basin_names';
 import { intensityCalculator } from './intensity_calculator';
+import toggleDetailedPaths from './toggleDetailedPaths';
 
 export default function showStormInfo(map, feature) {
     map.getCanvas().style.cursor = 'pointer';
@@ -12,7 +13,7 @@ export default function showStormInfo(map, feature) {
     map.setFilter("all-storm-sub-paths", ["==", ["get", "serial_num"], `${feature.properties.serial_num}`]);
     map.setFilter("all-points", ["==", ["get", "serial_num"], `${feature.properties.serial_num}`]);
 
-    document.getElementById("sample-name").innerHTML = `${feature.properties.name} (${feature.properties.season})`;
+    document.getElementById("sample-name").innerHTML = `${feature.properties.name} (${feature.properties.month}, ${feature.properties.season})`;
     document.getElementById("sample-num").innerHTML = `storm #${feature.properties.num} of the season`;
     document.getElementById("sample-basin").innerHTML = `${basinNames(feature.properties.basin)}`;
     document.getElementById("sample-max-wind").innerHTML = `${feature.properties.max_windspeed} knots`;
@@ -28,6 +29,10 @@ export default function showStormInfo(map, feature) {
 
     document.getElementById("name").style.border = "2px solid red";
     document.getElementById("name").value = `${feature.properties.name}`;
+
+    // swith to detailed paths
+
+    toggleDetailedPaths(map);
 
     // BASIN INPUT STYLING //
 
@@ -74,8 +79,8 @@ export default function showStormInfo(map, feature) {
 
     // KEEPS TWO BUTTONS ACTIVE //
 
-    document.getElementById("detailed-paths").style.opacity = "1";
-    document.getElementById("detailed-paths").style.pointerEvents = "auto";
+    // document.getElementById("detailed-paths").style.opacity = "1";
+    // document.getElementById("detailed-paths").style.pointerEvents = "auto";
     document.getElementById("reset-fields").style.opacity = "1";
     document.getElementById("reset-fields").style.pointerEvents = "auto";
 }

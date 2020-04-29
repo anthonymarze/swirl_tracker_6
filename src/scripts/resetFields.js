@@ -28,8 +28,8 @@ export default function resetFields(map, mapCenter, zoomLevel){
 
     // STYLES INPUTS TO ORIGINAL STATE //
 
-    document.getElementById("detailed-paths").style.backgroundColor = "#fff";
-    document.getElementById("detailed-paths").style.border = "1px solid #696969";
+    // document.getElementById("detailed-paths").style.backgroundColor = "#fff";
+    // document.getElementById("detailed-paths").style.border = "1px solid #696969";
 
     document.getElementById("name").value = "";
     document.getElementById("name").style.border = "1px solid #696969";
@@ -89,8 +89,8 @@ export default function resetFields(map, mapCenter, zoomLevel){
 
     // DEACTIVATES DETAILED PATHS //
 
-    document.getElementById("detailed-paths").style.opacity = "0.5";
-    document.getElementById("detailed-paths").style.pointerEvents = "none";
+    // document.getElementById("detailed-paths").style.opacity = "0.5";
+    // document.getElementById("detailed-paths").style.pointerEvents = "none";
 
     // RETURNS VALUES TO ORIGINAL SETTINGS
 
